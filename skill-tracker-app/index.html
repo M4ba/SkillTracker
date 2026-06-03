@@ -176,10 +176,10 @@ select:focus,input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var
 <div class="app" id="app">
 <div class="app-title"><i class="ti ti-trophy"></i> Skill Tracker</div>
 <nav class="nav">
-  <button class="nav-btn active" onclick="setTab('home')" id="nb-home"><i class="ti ti-home"></i>Home</button>
-  <button class="nav-btn" onclick="setTab('log')" id="nb-log"><i class="ti ti-plus"></i>Erfassen</button>
-  <button class="nav-btn" onclick="setTab('stats')" id="nb-stats"><i class="ti ti-chart-bar"></i>Statistik</button>
-  <button class="nav-btn" onclick="setTab('history')" id="nb-history"><i class="ti ti-list"></i>Verlauf</button>
+  <button class="nav-btn active" onclick="setTab('home')" id="nb-home"><i class="ti ti-home"></i><span id="nl-home">Home</span></button>
+  <button class="nav-btn" onclick="setTab('log')" id="nb-log"><i class="ti ti-plus"></i><span id="nl-log">Erfassen</span></button>
+  <button class="nav-btn" onclick="setTab('stats')" id="nb-stats"><i class="ti ti-chart-bar"></i><span id="nl-stats">Statistik</span></button>
+  <button class="nav-btn" onclick="setTab('history')" id="nb-history"><i class="ti ti-list"></i><span id="nl-history">Verlauf</span></button>
   <button class="nav-btn" onclick="setTab('settings')" id="nb-settings" aria-label="Einstellungen"><i class="ti ti-settings"></i></button>
 </nav>
 <div id="tab-home" class="tab-content active"></div>
@@ -195,15 +195,17 @@ select:focus,input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var
 <script>
 const COLORS=['#7F77DD','#1D9E75','#D85A30','#378ADD','#D4537E','#BA7517','#639922','#E24B4A','#534AB7','#0F6E56'];
 const PRESETS=[
-  {id:'guitar',name:'Gitarre',icon:'\u{1F3B8}',color:'#D85A30'},{id:'piano',name:'Klavier',icon:'\u{1F3B9}',color:'#534AB7'},
-  {id:'drawing',name:'Zeichnen',icon:'\u{1F3A8}',color:'#D4537E'},{id:'osu',name:'osu!mania',icon:'\u{1F3AE}',color:'#7F77DD'},
-  {id:'coding',name:'Programmieren',icon:'\u{1F4BB}',color:'#1D9E75'},{id:'japanese',name:'Japanisch',icon:'\u{1F1EF}\u{1F1F5}',color:'#E24B4A'},
-  {id:'sport',name:'Sport',icon:'\u{1F3CB}\uFE0F',color:'#639922'},{id:'reading',name:'Lesen',icon:'\u{1F4DA}',color:'#BA7517'},
-  {id:'music',name:'Musik prod.',icon:'\u{1F3A7}',color:'#378ADD'},{id:'singing',name:'Gesang',icon:'\u{1F3A4}',color:'#D4537E'},
-  {id:'chess',name:'Schach',icon:'\u265F\uFE0F',color:'#888780'},{id:'math',name:'Mathe',icon:'\u{1F4D0}',color:'#0F6E56'},
+  {id:'guitar',key:'guitar',icon:'\u{1F3B8}',color:'#D85A30'},{id:'piano',key:'piano',icon:'\u{1F3B9}',color:'#534AB7'},
+  {id:'drawing',key:'drawing',icon:'\u{1F3A8}',color:'#D4537E'},{id:'osu',key:'osu',icon:'\u{1F3AE}',color:'#7F77DD'},
+  {id:'coding',key:'coding',icon:'\u{1F4BB}',color:'#1D9E75'},{id:'japanese',key:'japanese',icon:'\u{1F1EF}\u{1F1F5}',color:'#E24B4A'},
+  {id:'sport',key:'sport',icon:'\u{1F3CB}\uFE0F',color:'#639922'},{id:'reading',key:'reading',icon:'\u{1F4DA}',color:'#BA7517'},
+  {id:'music',key:'music',icon:'\u{1F3A7}',color:'#378ADD'},{id:'singing',key:'singing',icon:'\u{1F3A4}',color:'#D4537E'},
+  {id:'chess',key:'chess',icon:'\u265F\uFE0F',color:'#888780'},{id:'math',key:'math',icon:'\u{1F4D0}',color:'#0F6E56'},
 ];
+function presetName(p){return t('preset_'+p.key);}
 const ICON_POOL=['\u{1F3B8}','\u{1F3B9}','\u{1F3A8}','\u{1F3AE}','\u{1F4BB}','\u{1F4DA}','\u{1F3A7}','\u{1F3A4}','\u{1F3CB}\uFE0F','\u265F\uFE0F','\u{1F4D0}','\u{1F1EF}\u{1F1F5}','\u{1F3AF}','\u{1F680}','\u26A1','\u{1F525}','\u{1F31F}','\u{1F4A1}','\u{1F3B5}','\u{1F3BB}','\u{1F941}','\u{1F3BA}','\u{1F58C}\uFE0F','\u{1F4DD}','\u{1F52C}','\u{1F338}','\u{1F98A}','\u{1F409}','\u{1F5E1}\uFE0F','\u{1F3AD}','\u{1F4F7}','\u{1F3AC}','\u{1F3C6}','\u{1F48E}','\u{1F30A}','\u{1F9E0}','\u{1F47E}','\u{1F579}\uFE0F','\u{1F3B2}','\u{1F9E9}','\u{1F3F9}','\u{1F393}','\u2699\uFE0F','\u{1F52D}','\u{1F3AA}','\u{1F319}','\u2600\uFE0F','\u{1F308}','\u{1F375}','\u2728'];
-const LEVELS=[{name:'Neuling',min:0},{name:'Anf\u00e4nger',min:500},{name:'Lernender',min:1500},{name:'Fortgeschritten',min:3500},{name:'Ge\u00fcbt',min:7000},{name:'Kompetent',min:12000},{name:'Erfahren',min:20000},{name:'Experte',min:35000},{name:'Meister',min:60000},{name:'Legende',min:100000}];
+const LEVELS=[{key:'novice',min:0},{key:'beginner',min:500},{key:'learner',min:1500},{key:'advanced',min:3500},{key:'skilled',min:7000},{key:'competent',min:12000},{key:'experienced',min:20000},{key:'expert',min:35000},{key:'master',min:60000},{key:'legend',min:100000}];
+function lvlName(o){return o?t('lvl_'+o.key):'';}
 
 const THEMES={
   hell:{label:'Hell',dark:false,accent:'#7F77DD',accentStrong:'#534AB7',badgeBg:'#EEEDFE',badgeText:'#3C3489',
@@ -260,11 +262,126 @@ function getLvl(xp){for(let i=LEVELS.length-1;i>=0;i--)if(xp>=LEVELS[i].min)retu
 function isWeekend(ds){const d=new Date(ds+'T12:00:00').getDay();return d===0||d===6;}
 function xpH(h,ds){return Math.round(h*100)*(isWeekend(ds)?2:1);}
 function localDateStr(date){const y=date.getFullYear();const m=String(date.getMonth()+1).padStart(2,'0');const d=String(date.getDate()).padStart(2,'0');return `${y}-${m}-${d}`;}
-function fmtDur(h){if(!h||h<=0)return'0 min';if(h<1)return Math.round(h*60)+' min';return h.toLocaleString('de')+'h';}
+function fmtDur(h){if(!h||h<=0)return'0 min';if(h<1)return Math.round(h*60)+' min';return h.toLocaleString(locale())+'h';}
 function today(){return localDateStr(new Date());}
 
 const STORAGE_KEY='skill-tracker-data-v1';
 const THEME_KEY='skill-tracker-theme';
+const LANG_KEY='skill-tracker-lang';
+let LANG='de';
+
+const I18N={
+de:{
+ nav_home:'Home',nav_log:'Erfassen',nav_stats:'Statistik',nav_history:'Verlauf',nav_settings:'Einstellungen',
+ home_total_xp:'Gesamt XP',home_hours:'Stunden',home_today_xp:'Heute XP',home_skills:'Skills',
+ streak_days:'Tage Streak',streak_longest:'L\u00e4ngster Streak',last30:'Letzte 30 Tage',older_today:'\u00e4lter \u2192 heute',
+ sec_skills:'Skills',add_skill:'Skill hinzuf\u00fcgen',weekend_bonus:'x2 XP Wochenende!',sec_achievements:'Achievements',
+ max:'MAX',
+ hm_activity:'Aktivit\u00e4t',hm_lastyear:'Letztes Jahr',hm_calyear:'Kalenderjahr',hm_less:'weniger',hm_more:'mehr',
+ hm_weekend_legend:'Wochenende (x2 XP)',hm_xp_total:'XP gesamt',
+ tip_no_activity:'keine Aktivit\u00e4t',tip_weekend:'Wochenende x2 XP',today_paren:'(heute)',
+ log_manual:'Manuell',log_timer:'Stoppuhr',log_need_skill:'Erstelle zuerst einen Skill im Home-Tab.',
+ field_skill:'Skill',field_hours:'Stunden',field_date:'Datum',field_note_opt:'Notiz (optional)',note_ph:'Was hast du gemacht?',
+ btn_log:'Eintragen',xp_formula:'1h = 100 XP \u00b7 Wochenende = 200 XP',
+ timer_rounds:'Runden',timer_round:'Runde',timer_save_session:'Sitzung speichern',field_note:'Notiz',btn_save:'Speichern',
+ timer_running:'l\u00e4uft...',timer_paused:'pausiert',timer_ready:'bereit',timer_min1:'Mindestens 1 Minute erforderlich',
+ stats_no_data:'Noch keine Daten.',stat_streak:'Streak',stat_avg:'\u00d8 XP / Aktivtag',days_word:'Tage',
+ stat_xp30:'XP letzte 30 Tage',weekday_word:'Wochentag',weekend_word:'Wochenende',
+ stat_xp_weekday:'XP nach Wochentag',stat_xp_skill:'XP pro Skill',stat_xp_cumulative:'XP-Verlauf pro Skill (kumuliert)',
+ stat_balance:'Skill-Balance',forecast_title:'Prognose',forecast_sub:'Gesch\u00e4tzt nach deinem Tempo der letzten 30 Tage',
+ forecast_max:'H\u00f6chstes Level erreicht',forecast_inactive:'zuletzt inaktiv',wk_short:'Wo',yr_short:'J',lt1wk:'< 1 Wo',
+ hist_none:'Noch keine Eintr\u00e4ge.',hist_deleted:'Gel\u00f6schter Skill',
+ set_design:'Design',set_language:'Sprache',set_updates:'Updates',set_check_updates:'Auf Updates pr\u00fcfen',
+ update_loading_ver:'Version wird geladen...',update_downloading:'Wird heruntergeladen...',
+ set_data:'Daten',data_electron:'Daten werden lokal gespeichert und bleiben bei Updates erhalten.',
+ data_browser:'Deine Daten liegen lokal im Browser. <b>Vor einem Update</b> exportierst du sie als Datei, \u00f6ffnest die neue Version und importierst sie wieder.',
+ btn_export:'Backup exportieren (.json)',btn_import:'Backup importieren',set_danger:'Gefahrenzone',btn_delete_all:'Alle Daten l\u00f6schen',
+ import_bad:'Datei hat kein g\u00fcltiges Format',import_confirm:'Achtung: Deine aktuellen Daten werden komplett ersetzt. Fortfahren?',
+ import_failed:'Import fehlgeschlagen: ',export_failed:'Export fehlgeschlagen: ',backup_saved:'Backup gespeichert: ',backup_dl:'Backup heruntergeladen',
+ reset_c1:'Wirklich ALLE Skills und Eintr\u00e4ge unwiderruflich l\u00f6schen?',reset_c2:'Bist du sicher? Das kann nicht r\u00fcckg\u00e4ngig gemacht werden. (Tipp: vorher exportieren!)',
+ reset_done:'Alle Daten gel\u00f6scht',save_failed:'Speichern fehlgeschlagen \u2014 evtl. ist der Browser-Speicher voll.',
+ modal_choose:'Skill ausw\u00e4hlen',modal_custom_add:'Custom Skill hinzuf\u00fcgen',btn_cancel:'Abbrechen',btn_next:'Weiter',
+ modal_create_custom:'Custom Skill erstellen',modal_adjust:'Skill anpassen',field_name:'Name',field_icon:'Icon',preview:'Vorschau',
+ field_color:'Farbe',btn_back:'Zur\u00fcck',btn_add:'Hinzuf\u00fcgen',modal_del:'Skill l\u00f6schen?',btn_delete:'L\u00f6schen',
+ chal_label:'Tagesziel',chal_done:'Erledigt',chal_redeem:'Einl\u00f6sen',chal_achieved:'Geschafft!',chal_complete:'Tagesziel erf\u00fcllt!',
+ ach_prefix:'Achievement:',levelup_prefix:'Level Up!',
+ upd_restart:'Jetzt neu starten',upd_current:'Aktuell',upd_searching:'Suche...',upd_ready:'bereit',
+ preset_guitar:'Gitarre',preset_piano:'Klavier',preset_drawing:'Zeichnen',preset_osu:'osu!mania',preset_coding:'Programmieren',
+ preset_japanese:'Japanisch',preset_sport:'Sport',preset_reading:'Lesen',preset_music:'Musik prod.',preset_singing:'Gesang',preset_chess:'Schach',preset_math:'Mathe',
+ lvl_novice:'Neuling',lvl_beginner:'Anf\u00e4nger',lvl_learner:'Lernender',lvl_advanced:'Fortgeschritten',lvl_skilled:'Ge\u00fcbt',lvl_competent:'Kompetent',lvl_experienced:'Erfahren',lvl_expert:'Experte',lvl_master:'Meister',lvl_legend:'Legende',
+ ach_first_n:'Erste Schritte',ach_first_d:'Ersten Eintrag erfasst',ach_streak7_n:'Auf Kurs',ach_streak7_d:'7-Tage-Streak',
+ ach_streak30_n:'Eiserner Wille',ach_streak30_d:'30-Tage-Streak',ach_weekend_n:'Wochenend-Krieger',ach_weekend_d:'5 Wochenend-Sessions',
+ ach_versatile_n:'Vielseitig',ach_versatile_d:'5 Skills erstellt',ach_xp1k_n:'Tausendsassa',ach_xp1k_d:'1.000 XP gesamt',
+ ach_xp10k_n:'Zehntausender',ach_xp10k_d:'10.000 XP gesamt',ach_lvl5_n:'Aufsteiger',ach_lvl5_d:'Ein Skill auf Lvl 5',
+ ach_lvl9_n:'Meisterhaft',ach_lvl9_d:'Ein Skill auf Lvl 9',ach_marathon_n:'Marathon',ach_marathon_d:'8h+ an einem Tag',
+ ach_days50_n:'Best\u00e4ndig',ach_days50_d:'50 aktive Tage',ach_logs100_n:'Sammler',ach_logs100_d:'100 Eintr\u00e4ge',
+ chal_dur45:'Bleib dran: heute mind. 45 Minuten',chal_dur60:'\u00dcbe heute mindestens 1 Stunde',chal_dur120:'Sammle heute 2 Stunden Lernzeit',
+ chal_dur180:'Gro\u00dfer Tag: 3 Stunden heute',chal_focus90:'Fokus-Session: 90 Min am selben Skill',chal_focus120:'Tiefer Fokus: 2h an einem einzigen Skill',
+ chal_two30:'2 Skills f\u00fcr je mind. 30 Minuten',chal_three20:'3 Skills f\u00fcr je mind. 20 Minuten',chal_xp300:'Erreiche heute 300 XP',chal_xp500:'Erreiche heute 500 XP',
+},
+en:{
+ nav_home:'Home',nav_log:'Log',nav_stats:'Stats',nav_history:'History',nav_settings:'Settings',
+ home_total_xp:'Total XP',home_hours:'Hours',home_today_xp:'XP Today',home_skills:'Skills',
+ streak_days:'Day Streak',streak_longest:'Longest Streak',last30:'Last 30 Days',older_today:'older \u2192 today',
+ sec_skills:'Skills',add_skill:'Add Skill',weekend_bonus:'x2 XP Weekend!',sec_achievements:'Achievements',
+ max:'MAX',
+ hm_activity:'Activity',hm_lastyear:'Last Year',hm_calyear:'Calendar Year',hm_less:'less',hm_more:'more',
+ hm_weekend_legend:'Weekend (x2 XP)',hm_xp_total:'XP total',
+ tip_no_activity:'no activity',tip_weekend:'Weekend x2 XP',today_paren:'(today)',
+ log_manual:'Manual',log_timer:'Timer',log_need_skill:'Create a skill in the Home tab first.',
+ field_skill:'Skill',field_hours:'Hours',field_date:'Date',field_note_opt:'Note (optional)',note_ph:'What did you do?',
+ btn_log:'Log',xp_formula:'1h = 100 XP \u00b7 Weekend = 200 XP',
+ timer_rounds:'Laps',timer_round:'Lap',timer_save_session:'Save session',field_note:'Note',btn_save:'Save',
+ timer_running:'running...',timer_paused:'paused',timer_ready:'ready',timer_min1:'At least 1 minute required',
+ stats_no_data:'No data yet.',stat_streak:'Streak',stat_avg:'\u00d8 XP / active day',days_word:'days',
+ stat_xp30:'XP last 30 days',weekday_word:'Weekday',weekend_word:'Weekend',
+ stat_xp_weekday:'XP by weekday',stat_xp_skill:'XP per skill',stat_xp_cumulative:'XP over time per skill (cumulative)',
+ stat_balance:'Skill balance',forecast_title:'Forecast',forecast_sub:'Estimated from your pace over the last 30 days',
+ forecast_max:'Highest level reached',forecast_inactive:'recently inactive',wk_short:'wk',yr_short:'y',lt1wk:'< 1 wk',
+ hist_none:'No entries yet.',hist_deleted:'Deleted skill',
+ set_design:'Theme',set_language:'Language',set_updates:'Updates',set_check_updates:'Check for updates',
+ update_loading_ver:'Loading version...',update_downloading:'Downloading...',
+ set_data:'Data',data_electron:'Data is stored locally and is kept across updates.',
+ data_browser:'Your data is stored locally in the browser. <b>Before an update</b> export it as a file, open the new version and import it again.',
+ btn_export:'Export backup (.json)',btn_import:'Import backup',set_danger:'Danger zone',btn_delete_all:'Delete all data',
+ import_bad:'File has an invalid format',import_confirm:'Warning: your current data will be completely replaced. Continue?',
+ import_failed:'Import failed: ',export_failed:'Export failed: ',backup_saved:'Backup saved: ',backup_dl:'Backup downloaded',
+ reset_c1:'Really delete ALL skills and entries permanently?',reset_c2:'Are you sure? This cannot be undone. (Tip: export first!)',
+ reset_done:'All data deleted',save_failed:'Save failed \u2014 browser storage may be full.',
+ modal_choose:'Choose a skill',modal_custom_add:'Add custom skill',btn_cancel:'Cancel',btn_next:'Next',
+ modal_create_custom:'Create custom skill',modal_adjust:'Customize skill',field_name:'Name',field_icon:'Icon',preview:'Preview',
+ field_color:'Color',btn_back:'Back',btn_add:'Add',modal_del:'Delete skill?',btn_delete:'Delete',
+ chal_label:'Daily Goal',chal_done:'Done',chal_redeem:'Redeem',chal_achieved:'Achieved!',chal_complete:'Daily goal complete!',
+ ach_prefix:'Achievement:',levelup_prefix:'Level Up!',
+ upd_restart:'Restart now',upd_current:'Up to date',upd_searching:'Searching...',upd_ready:'ready',
+ preset_guitar:'Guitar',preset_piano:'Piano',preset_drawing:'Drawing',preset_osu:'osu!mania',preset_coding:'Coding',
+ preset_japanese:'Japanese',preset_sport:'Fitness',preset_reading:'Reading',preset_music:'Music prod.',preset_singing:'Singing',preset_chess:'Chess',preset_math:'Math',
+ lvl_novice:'Novice',lvl_beginner:'Beginner',lvl_learner:'Learner',lvl_advanced:'Advanced',lvl_skilled:'Skilled',lvl_competent:'Competent',lvl_experienced:'Experienced',lvl_expert:'Expert',lvl_master:'Master',lvl_legend:'Legend',
+ ach_first_n:'First Steps',ach_first_d:'Logged your first entry',ach_streak7_n:'On Track',ach_streak7_d:'7-day streak',
+ ach_streak30_n:'Iron Will',ach_streak30_d:'30-day streak',ach_weekend_n:'Weekend Warrior',ach_weekend_d:'5 weekend sessions',
+ ach_versatile_n:'Versatile',ach_versatile_d:'Created 5 skills',ach_xp1k_n:'Millennial',ach_xp1k_d:'1,000 XP total',
+ ach_xp10k_n:'Ten-Thousander',ach_xp10k_d:'10,000 XP total',ach_lvl5_n:'Riser',ach_lvl5_d:'A skill at Lvl 5',
+ ach_lvl9_n:'Masterful',ach_lvl9_d:'A skill at Lvl 9',ach_marathon_n:'Marathon',ach_marathon_d:'8h+ in one day',
+ ach_days50_n:'Consistent',ach_days50_d:'50 active days',ach_logs100_n:'Collector',ach_logs100_d:'100 entries',
+ chal_dur45:'Keep it up: at least 45 minutes today',chal_dur60:'Practice at least 1 hour today',chal_dur120:'Collect 2 hours of practice today',
+ chal_dur180:'Big day: 3 hours today',chal_focus90:'Focus session: 90 min on the same skill',chal_focus120:'Deep focus: 2h on a single skill',
+ chal_two30:'2 skills for at least 30 minutes each',chal_three20:'3 skills for at least 20 minutes each',chal_xp300:'Reach 300 XP today',chal_xp500:'Reach 500 XP today',
+}
+};
+function t(k){const v=I18N[LANG]&&I18N[LANG][k];return v!==undefined?v:(I18N.de[k]!==undefined?I18N.de[k]:k);}
+function locale(){return LANG==='en'?'en':'de';}
+function weekdayLetters(){return LANG==='en'?['Mo','Tu','We','Th','Fr','Sa','Su']:['Mo','Di','Mi','Do','Fr','Sa','So'];}
+function remainText(rem,name){return LANG==='en'?`${rem} to ${name}`:`noch ${rem} bis ${name}`;}
+function needText(need,name){return LANG==='en'?`${need} XP to ${name}`:`${need} XP bis ${name}`;}
+function xpForToast(xp,label){return LANG==='en'?`+${xp} XP for ${label}`:`+${xp} XP f\u00fcr ${label}`;}
+function setLang(l){LANG=l;try{localStorage.setItem(LANG_KEY,l);}catch(e){}applyStaticLang();setTab(curTab);}
+function applyStaticLang(){
+  const m={'nl-home':'nav_home','nl-log':'nav_log','nl-stats':'nav_stats','nl-history':'nav_history'};
+  Object.entries(m).forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.textContent=t(k);});
+  const s=document.getElementById('nb-settings');if(s)s.setAttribute('aria-label',t('nav_settings'));
+  document.documentElement.lang=LANG;
+}
+
 let S={skills:[],logs:[]},curTab='home',hmMode='year',logMode='manual';
 let hmYear=new Date().getFullYear();
 let chartXP=null,chartWeek=null,chartSkill=null,chartLine=null,chartRadar=null;
@@ -278,7 +395,7 @@ function load(){
   S.skills.forEach((sk,i)=>{if(!sk.icon)sk.icon='\u{1F3AF}';if(!sk.color)sk.color=COLORS[i%COLORS.length];});
   if(!S.seenLevels)S.seenLevels=computeSkillLevels();
 }
-function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));}catch(e){alert('Speichern fehlgeschlagen \u2014 evtl. ist der Browser-Speicher voll.');}}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));}catch(e){alert(t('save_failed'));}}
 
 function setTab(t){
   curTab=t;
@@ -336,19 +453,21 @@ function dataYearRange(){
 
 // ===== Achievements =====
 const ACHIEVEMENTS=[
-  {id:'first',icon:'\u{1F423}',name:'Erste Schritte',desc:'Ersten Eintrag erfasst',check:()=>S.logs.length>=1},
-  {id:'streak7',icon:'\u{1F525}',name:'Auf Kurs',desc:'7-Tage-Streak',check:()=>calcLongestStreak(S.logs)>=7},
-  {id:'streak30',icon:'\u{1F31F}',name:'Eiserner Wille',desc:'30-Tage-Streak',check:()=>calcLongestStreak(S.logs)>=30},
-  {id:'weekend',icon:'\u26A1',name:'Wochenend-Krieger',desc:'5 Wochenend-Sessions',check:()=>S.logs.filter(l=>isWeekend(l.date)).length>=5},
-  {id:'versatile',icon:'\u{1F3AF}',name:'Vielseitig',desc:'5 Skills erstellt',check:()=>S.skills.length>=5},
-  {id:'xp1k',icon:'\u{1F4AA}',name:'Tausendsassa',desc:'1.000 XP gesamt',check:()=>S.logs.reduce((a,l)=>a+l.xp,0)>=1000},
-  {id:'xp10k',icon:'\u{1F48E}',name:'Zehntausender',desc:'10.000 XP gesamt',check:()=>S.logs.reduce((a,l)=>a+l.xp,0)>=10000},
-  {id:'lvl5',icon:'\u{1F3C5}',name:'Aufsteiger',desc:'Ein Skill auf Lvl 5',check:()=>S.skills.some(sk=>getLvl(S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0)).lvl>=5)},
-  {id:'lvl9',icon:'\u{1F451}',name:'Meisterhaft',desc:'Ein Skill auf Lvl 9',check:()=>S.skills.some(sk=>getLvl(S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0)).lvl>=9)},
-  {id:'marathon',icon:'\u{1F3C3}',name:'Marathon',desc:'8h+ an einem Tag',check:()=>{const m={};S.logs.forEach(l=>m[l.date]=(m[l.date]||0)+l.hours);return Object.values(m).some(h=>h>=8);}},
-  {id:'days50',icon:'\u{1F4C5}',name:'Best\u00e4ndig',desc:'50 aktive Tage',check:()=>new Set(S.logs.map(l=>l.date)).size>=50},
-  {id:'logs100',icon:'\u{1F4DA}',name:'Sammler',desc:'100 Eintr\u00e4ge',check:()=>S.logs.length>=100},
+  {id:'first',icon:'\u{1F423}',check:()=>S.logs.length>=1},
+  {id:'streak7',icon:'\u{1F525}',check:()=>calcLongestStreak(S.logs)>=7},
+  {id:'streak30',icon:'\u{1F31F}',check:()=>calcLongestStreak(S.logs)>=30},
+  {id:'weekend',icon:'\u26A1',check:()=>S.logs.filter(l=>isWeekend(l.date)).length>=5},
+  {id:'versatile',icon:'\u{1F3AF}',check:()=>S.skills.length>=5},
+  {id:'xp1k',icon:'\u{1F4AA}',check:()=>S.logs.reduce((a,l)=>a+l.xp,0)>=1000},
+  {id:'xp10k',icon:'\u{1F48E}',check:()=>S.logs.reduce((a,l)=>a+l.xp,0)>=10000},
+  {id:'lvl5',icon:'\u{1F3C5}',check:()=>S.skills.some(sk=>getLvl(S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0)).lvl>=5)},
+  {id:'lvl9',icon:'\u{1F451}',check:()=>S.skills.some(sk=>getLvl(S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0)).lvl>=9)},
+  {id:'marathon',icon:'\u{1F3C3}',check:()=>{const m={};S.logs.forEach(l=>m[l.date]=(m[l.date]||0)+l.hours);return Object.values(m).some(h=>h>=8);}},
+  {id:'days50',icon:'\u{1F4C5}',check:()=>new Set(S.logs.map(l=>l.date)).size>=50},
+  {id:'logs100',icon:'\u{1F4DA}',check:()=>S.logs.length>=100},
 ];
+function achName(a){return t('ach_'+a.id+'_n');}
+function achDesc(a){return t('ach_'+a.id+'_d');}
 function unlockedAchievements(){return ACHIEVEMENTS.filter(a=>{try{return a.check();}catch(e){return false;}}).map(a=>a.id);}
 function checkNewAchievements(){
   if(!S.seenAch)S.seenAch=[];
@@ -356,7 +475,7 @@ function checkNewAchievements(){
   const fresh=now.filter(id=>!S.seenAch.includes(id));
   if(fresh.length){
     S.seenAch=now;save();
-    fresh.forEach((id,i)=>{const a=ACHIEVEMENTS.find(x=>x.id===id);setTimeout(()=>{toast(`\u{1F3C6} Achievement: ${a.icon} ${a.name}`);fireConfetti();},600+i*1600);});
+    fresh.forEach((id,i)=>{const a=ACHIEVEMENTS.find(x=>x.id===id);setTimeout(()=>{toast(`\u{1F3C6} ${t('ach_prefix')} ${a.icon} ${achName(a)}`);fireConfetti();},600+i*1600);});
   } else {S.seenAch=now;save();}
   checkLevelUps();
 }
@@ -370,8 +489,8 @@ function checkLevelUps(){
   Object.keys(cur).forEach(id=>{const prev=S.seenLevels[id]||1;if(cur[id]>prev){const sk=S.skills.find(s=>s.id===id);if(sk)up={sk,lvl:cur[id]};}});
   S.seenLevels=cur;save();
   if(up){
-    const name=LEVELS[up.lvl-1]?LEVELS[up.lvl-1].name:'';
-    setTimeout(()=>{toast(`\u2B50 Level Up! ${up.sk.icon} ${up.sk.name} \u2192 Lvl ${up.lvl} ${name}`);fireConfetti(true);},400);
+    const name=LEVELS[up.lvl-1]?lvlName(LEVELS[up.lvl-1]):'';
+    setTimeout(()=>{toast(`\u2B50 ${t('levelup_prefix')} ${up.sk.icon} ${up.sk.name} \u2192 Lvl ${up.lvl} ${name}`);fireConfetti(true);},400);
   }
 }
 
@@ -407,16 +526,16 @@ function hoursPerSkillToday(){const m={};todayLogsArr().forEach(l=>{m[l.skillId]
 function maxSkillHoursToday(){const v=Object.values(hoursPerSkillToday());return v.length?Math.max(...v):0;}
 function skillsAtLeast(minH){return Object.values(hoursPerSkillToday()).filter(h=>h>=minH-1e-9).length;}
 const CHALLENGES=[
-  {id:'dur45',type:'dur',text:'Bleib dran: heute mind. 45 Minuten',goal:0.75,bonus:50,prog:hoursToday},
-  {id:'dur60',type:'dur',text:'\u00dcbe heute mindestens 1 Stunde',goal:1,bonus:50,prog:hoursToday},
-  {id:'dur120',type:'dur',text:'Sammle heute 2 Stunden Lernzeit',goal:2,bonus:75,prog:hoursToday},
-  {id:'dur180',type:'dur',text:'Gro\u00dfer Tag: 3 Stunden heute',goal:3,bonus:100,prog:hoursToday},
-  {id:'focus90',type:'dur',text:'Fokus-Session: 90 Min am selben Skill',goal:1.5,bonus:75,prog:maxSkillHoursToday},
-  {id:'focus120',type:'dur',text:'Tiefer Fokus: 2h an einem einzigen Skill',goal:2,bonus:100,prog:maxSkillHoursToday},
-  {id:'two30',type:'count',text:'2 Skills f\u00fcr je mind. 30 Minuten',goal:2,bonus:75,prog:()=>skillsAtLeast(0.5)},
-  {id:'three20',type:'count',text:'3 Skills f\u00fcr je mind. 20 Minuten',goal:3,bonus:100,prog:()=>skillsAtLeast(1/3)},
-  {id:'xp300',type:'xp',text:'Erreiche heute 300 XP',goal:300,bonus:75,prog:xpToday},
-  {id:'xp500',type:'xp',text:'Erreiche heute 500 XP',goal:500,bonus:100,prog:xpToday},
+  {id:'dur45',type:'dur',goal:0.75,bonus:50,prog:hoursToday},
+  {id:'dur60',type:'dur',goal:1,bonus:50,prog:hoursToday},
+  {id:'dur120',type:'dur',goal:2,bonus:75,prog:hoursToday},
+  {id:'dur180',type:'dur',goal:3,bonus:100,prog:hoursToday},
+  {id:'focus90',type:'dur',goal:1.5,bonus:75,prog:maxSkillHoursToday},
+  {id:'focus120',type:'dur',goal:2,bonus:100,prog:maxSkillHoursToday},
+  {id:'two30',type:'count',goal:2,bonus:75,prog:()=>skillsAtLeast(0.5)},
+  {id:'three20',type:'count',goal:3,bonus:100,prog:()=>skillsAtLeast(1/3)},
+  {id:'xp300',type:'xp',goal:300,bonus:75,prog:xpToday},
+  {id:'xp500',type:'xp',goal:500,bonus:100,prog:xpToday},
 ];
 function challengeDiff(c){return c.bonus>=100?'hard':(c.bonus>=75?'medium':'easy');}
 function getDailyChallenge(){
@@ -436,11 +555,11 @@ function claimChallenge(){
   S.claimedChallenges.push(today());
   const tl=todayLogsArr();
   let skillId=tl.length?tl[tl.length-1].skillId:(S.skills[0]&&S.skills[0].id);
-  if(skillId){S.logs.push({id:Date.now().toString(),skillId,hours:0,xp:c.bonus,date:today(),note:'\u{1F3AF} Tagesziel erf\u00fcllt',weekend:isWeekend(today()),challenge:true});}
-  save();toast(`\u{1F3AF} Tagesziel erf\u00fcllt! +${c.bonus} XP`);checkNewAchievements();renderHome();
+  if(skillId){S.logs.push({id:Date.now().toString(),skillId,hours:0,xp:c.bonus,date:today(),note:'\u{1F3AF} '+t('chal_complete'),weekend:isWeekend(today()),challenge:true});}
+  save();toast(`\u{1F3AF} ${t('chal_complete')} +${c.bonus} XP`);checkNewAchievements();renderHome();
 }
 function challengeProgText(c,prog){
-  if(c.type==='xp')return `${Math.round(prog).toLocaleString('de')} / ${c.goal.toLocaleString('de')} XP`;
+  if(c.type==='xp')return `${Math.round(prog).toLocaleString(locale())} / ${c.goal.toLocaleString(locale())} XP`;
   if(c.type==='dur')return `${fmtDur(Math.round(prog*60)/60)} / ${fmtDur(c.goal)}`;
   return `${prog} / ${c.goal}`;
 }
@@ -451,13 +570,13 @@ function challengeCardHTML(){
   const pct=Math.min(100,Math.round((prog/c.goal)*100));
   const done=raw>=c.goal;const claimed=challengeClaimed();
   let status;
-  if(claimed)status=`<span class="challenge-done"><i class="ti ti-circle-check-filled"></i> Erledigt \u00b7 +${c.bonus} XP</span>`;
-  else if(done)status=`<span style="font-size:12px;opacity:.9">Geschafft!</span><button class="challenge-claim" onclick="claimChallenge()">Einl\u00f6sen +${c.bonus} XP</button>`;
+  if(claimed)status=`<span class="challenge-done"><i class="ti ti-circle-check-filled"></i> ${t('chal_done')} \u00b7 +${c.bonus} XP</span>`;
+  else if(done)status=`<span style="font-size:12px;opacity:.9">${t('chal_achieved')}</span><button class="challenge-claim" onclick="claimChallenge()">${t('chal_redeem')} +${c.bonus} XP</button>`;
   else status=`<span style="font-size:12px;opacity:.9">${challengeProgText(c,raw)}</span><span style="font-size:11px;opacity:.7">+${c.bonus} XP</span>`;
   return `<div class="challenge-card">
     <div class="ch-icon">\u{1F3AF}</div>
-    <div class="challenge-label"><i class="ti ti-target-arrow" style="font-size:12px"></i> Tagesziel</div>
-    <div class="challenge-text">${c.text}</div>
+    <div class="challenge-label"><i class="ti ti-target-arrow" style="font-size:12px"></i> ${t('chal_label')}</div>
+    <div class="challenge-text">${t('chal_'+c.id)}</div>
     <div class="challenge-prog"><div class="challenge-prog-fill" style="width:${pct}%"></div></div>
     <div class="challenge-status">${status}</div>
   </div>`;
@@ -480,7 +599,7 @@ function forecastForSkill(sk){
 }
 
 // ===== Tages-Motivationsspruch =====
-const QUOTES=[
+const QUOTES_DE=[
   {t:'Der beste Zeitpunkt anzufangen war gestern. Der zweitbeste ist jetzt.',a:'Sprichwort'},
   {t:'Kleine Fortschritte sind immer noch Fortschritte.',a:''},
   {t:'Du musst nicht gro\u00dfartig sein um anzufangen, aber du musst anfangen um gro\u00dfartig zu werden.',a:'Zig Ziglar'},
@@ -497,8 +616,26 @@ const QUOTES=[
   {t:'Konstanz schl\u00e4gt Intensit\u00e4t \u2014 jeden Tag ein bisschen.',a:''},
   {t:'Was du heute \u00fcbst, ist das was du morgen kannst.',a:''},
 ];
+const QUOTES_EN=[
+  {t:'The best time to start was yesterday. The second best is now.',a:'Proverb'},
+  {t:'Small progress is still progress.',a:''},
+  {t:'You don\u2019t have to be great to start, but you have to start to be great.',a:'Zig Ziglar'},
+  {t:'Success is the sum of small efforts repeated day in and day out.',a:'Robert Collier'},
+  {t:'A pro is an amateur who never gave up.',a:''},
+  {t:'Discipline is the bridge between goals and accomplishment.',a:'Jim Rohn'},
+  {t:'It does not matter how slowly you go as long as you do not stop.',a:'Confucius'},
+  {t:'Mastery is not built in a day, but every day.',a:''},
+  {t:'Whoever stops getting better has stopped being good.',a:'Philip Rosenthal'},
+  {t:'Motivation gets you going, habit keeps you going.',a:'Jim Ryun'},
+  {t:'Practice does not make perfect. Perfect practice makes perfect.',a:'Vince Lombardi'},
+  {t:'Every expert was once a beginner.',a:''},
+  {t:'Today is a good chance to make your future self proud.',a:''},
+  {t:'Consistency beats intensity \u2014 a little every day.',a:''},
+  {t:'What you practice today is what you can do tomorrow.',a:''},
+];
 function quoteCardHTML(){
-  const q=QUOTES[seededInt('q'+today(),QUOTES.length)];
+  const arr=LANG==='en'?QUOTES_EN:QUOTES_DE;
+  const q=arr[seededInt('q'+today(),arr.length)];
   return `<div class="quote-card">
     <span class="quote-icon">\u{1F4AD}</span>
     <div><div class="quote-text">\u201E${q.t}\u201C</div>${q.a?`<div class="quote-author">\u2014 ${q.a}</div>`:''}</div>
@@ -529,37 +666,37 @@ function renderHome(){
             <span class="sk-name">${sk.name}</span>
             ${skStreak>0?`<span class="sk-streak">${skStreak}<i class="ti ti-flame" style="font-size:11px"></i></span>`:''}
           </div>
-          <span class="lvl-badge">Lvl ${lv.lvl} \u00b7 ${lv.name}</span>
+          <span class="lvl-badge">Lvl ${lv.lvl} \u00b7 ${lvlName(lv)}</span>
         </div>
       </div>
-      <div class="xp-text">${xp.toLocaleString('de')} XP${lv.next?` \u00b7 noch ${(lv.next.min-xp).toLocaleString('de')} bis ${lv.next.name}`:' \u00b7 MAX'}</div>
+      <div class="xp-text">${xp.toLocaleString(locale())} XP${lv.next?' \u00b7 '+remainText((lv.next.min-xp).toLocaleString(locale()),lvlName(lv.next)):' \u00b7 '+t('max')}</div>
       <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${sk.color}"></div></div>
     </div>`;
   }).join('');
-  skHtml+=`<div class="skill-card add-card" onclick="showAddSkill()"><i class="ti ti-plus" style="font-size:18px"></i> Skill hinzuf\u00fcgen</div>`;
+  skHtml+=`<div class="skill-card add-card" onclick="showAddSkill()"><i class="ti ti-plus" style="font-size:18px"></i> ${t('add_skill')}</div>`;
 
   el.innerHTML=`
   ${quoteCardHTML()}
-  ${we?`<div style="margin-bottom:10px"><span class="bonus-badge"><i class="ti ti-bolt" style="font-size:11px"></i> x2 XP Wochenende!</span></div>`:''}
+  ${we?`<div style="margin-bottom:10px"><span class="bonus-badge"><i class="ti ti-bolt" style="font-size:11px"></i> ${t('weekend_bonus')}</span></div>`:''}
   ${S.skills.length?challengeCardHTML():''}
   <div class="stat-grid">
-    <div class="stat-card"><div class="stat-lbl">Gesamt XP</div><div class="stat-val">${totalXP.toLocaleString('de')}</div></div>
-    <div class="stat-card"><div class="stat-lbl">Stunden</div><div class="stat-val">${totalH.toFixed(1)}</div></div>
-    <div class="stat-card"><div class="stat-lbl">Heute XP</div><div class="stat-val">${todayXP.toLocaleString('de')}</div></div>
-    <div class="stat-card"><div class="stat-lbl">Skills</div><div class="stat-val">${S.skills.length}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('home_total_xp')}</div><div class="stat-val">${totalXP.toLocaleString(locale())}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('home_hours')}</div><div class="stat-val">${totalH.toFixed(1)}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('home_today_xp')}</div><div class="stat-val">${todayXP.toLocaleString(locale())}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('home_skills')}</div><div class="stat-val">${S.skills.length}</div></div>
   </div>
   <div class="streak-row">
-    <div class="streak-card"><div class="streak-val" style="color:${streak>0?'#D85A30':'var(--color-text-secondary)'}">${streak}</div><div class="streak-lbl">Tage Streak <i class="ti ti-flame" style="font-size:12px;color:#D85A30"></i></div></div>
-    <div class="streak-card"><div class="streak-val">${longest}</div><div class="streak-lbl">L\u00e4ngster Streak</div></div>
+    <div class="streak-card"><div class="streak-val" style="color:${streak>0?'#D85A30':'var(--color-text-secondary)'}">${streak}</div><div class="streak-lbl">${t('streak_days')} <i class="ti ti-flame" style="font-size:12px;color:#D85A30"></i></div></div>
+    <div class="streak-card"><div class="streak-val">${longest}</div><div class="streak-lbl">${t('streak_longest')}</div></div>
     <div class="streak-card" style="flex:2;text-align:left">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span class="sec-lbl" style="margin-bottom:0">Letzte 30 Tage</span>
-        <span style="font-size:9px;color:var(--color-text-tertiary)">\u00e4lter \u2192 heute</span>
+        <span class="sec-lbl" style="margin-bottom:0">${t('last30')}</span>
+        <span style="font-size:9px;color:var(--color-text-tertiary)">${t('older_today')}</span>
       </div>
       <div id="streak-mini" style="display:flex;gap:2px;align-items:flex-end"></div>
     </div>
   </div>
-  <div class="sec-lbl">Skills</div>
+  <div class="sec-lbl">${t('sec_skills')}</div>
   <div class="skills-grid">${skHtml}</div>
   ${heatmapHTML()}
   ${achievementsHTML()}`;
@@ -574,11 +711,11 @@ function achievementsHTML(){
     const on=unlocked.includes(a.id);
     return `<div class="ach-item ${on?'unlocked':'locked'}">
       <div class="ach-icon">${on?a.icon:'\u{1F512}'}</div>
-      <div class="ach-info"><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>
+      <div class="ach-info"><div class="ach-name">${achName(a)}</div><div class="ach-desc">${achDesc(a)}</div></div>
     </div>`;
   }).join('');
   return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span class="sec-lbl" style="margin-bottom:0">Achievements</span>
+    <span class="sec-lbl" style="margin-bottom:0">${t('sec_achievements')}</span>
     <span style="font-size:11px;color:var(--color-text-secondary)">${unlocked.length} / ${ACHIEVEMENTS.length}</span>
   </div>
   <div class="ach-grid">${items}</div>`;
@@ -597,27 +734,27 @@ function renderStreakMini(){
     const we=isWeekend(d);const isToday=d===todayStr;
     const intensity=getIntensity(xp,allXPValues);
     const bg=pal[intensity];
-    return `<div style="width:11px;height:11px;border-radius:2px;background:${bg};${we?'outline:1px solid #BA7517;outline-offset:-1px':''}${isToday?';box-shadow:0 0 0 1.5px #D85A30':''}" title="${new Date(d+'T12:00:00').toLocaleDateString('de',{day:'numeric',month:'short'})}${xp>0?' \u00b7 '+xp.toLocaleString('de')+' XP':''}${isToday?' (heute)':''}"></div>`;
+    return `<div style="width:11px;height:11px;border-radius:2px;background:${bg};${we?'outline:1px solid #BA7517;outline-offset:-1px':''}${isToday?';box-shadow:0 0 0 1.5px #D85A30':''}" title="${new Date(d+'T12:00:00').toLocaleDateString(locale(),{day:'numeric',month:'short'})}${xp>0?' \u00b7 '+xp.toLocaleString(locale())+' XP':''}${isToday?' '+t('today_paren'):''}"></div>`;
   }).join('');
 }
 
 function legendHTML(){
   const pal=getPalette();
-  return `<div class="hm-legend"><span>weniger</span>
+  return `<div class="hm-legend"><span>${t('hm_less')}</span>
     <span class="lsq" style="background:${pal[1]}"></span><span class="lsq" style="background:${pal[2]}"></span>
     <span class="lsq" style="background:${pal[3]}"></span><span class="lsq" style="background:${pal[4]}"></span>
-    <span class="lsq" style="background:${pal[5]}"></span><span>mehr</span>
+    <span class="lsq" style="background:${pal[5]}"></span><span>${t('hm_more')}</span>
   </div>`;
 }
 
 function heatmapHTML(){
   return `<div class="hm-wrap">
     <div class="hm-header">
-      <span style="font-size:13px;font-weight:500">Aktivit\u00e4t</span>
+      <span style="font-size:13px;font-weight:500">${t('hm_activity')}</span>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <div class="hm-tabs">
-          <button class="hm-tab${hmMode==='year'?' active':''}" onclick="switchHm('year')">Letztes Jahr</button>
-          <button class="hm-tab${hmMode==='thisyear'?' active':''}" onclick="switchHm('thisyear')">Kalenderjahr</button>
+          <button class="hm-tab${hmMode==='year'?' active':''}" onclick="switchHm('year')">${t('hm_lastyear')}</button>
+          <button class="hm-tab${hmMode==='thisyear'?' active':''}" onclick="switchHm('thisyear')">${t('hm_calyear')}</button>
         </div>
         ${legendHTML()}
       </div>
@@ -630,7 +767,7 @@ function heatmapHTML(){
 function switchHm(mode){
   hmMode=mode;
   if(mode==='thisyear')hmYear=new Date().getFullYear();
-  document.querySelectorAll('.hm-tab').forEach(b=>b.classList.toggle('active',b.textContent.includes(mode==='year'?'Letztes':'Kalender')));
+  document.querySelectorAll('.hm-tab').forEach((b,i)=>b.classList.toggle('active',(mode==='year')===(i===0)));
   renderHeatmap(mode);
 }
 
@@ -650,7 +787,7 @@ function renderHeatmap(mode){
   const todayStr=today();
   const dayMap=buildDayMap();
   const allXPValues=Object.values(dayMap);
-  const weLegend=`<div style="font-size:10px;color:var(--color-text-tertiary);margin-top:8px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;outline:1px solid #BA7517;outline-offset:-1px;background:${pal[0]}"></span>Wochenende (x2 XP)</div>`;
+  const weLegend=`<div style="font-size:10px;color:var(--color-text-tertiary);margin-top:8px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;outline:1px solid #BA7517;outline-offset:-1px;background:${pal[0]}"></span>${t('hm_weekend_legend')}</div>`;
 
   if(mode==='thisyear'){
     const range=dataYearRange();
@@ -660,14 +797,14 @@ function renderHeatmap(mode){
         <button class="year-arrow" onclick="hmChangeYear(-1)" ${hmYear<=range.min?'disabled':''}><i class="ti ti-chevron-left"></i></button>
         <span class="year-label">${hmYear}</span>
         <button class="year-arrow" onclick="hmChangeYear(1)" ${hmYear>=range.max?'disabled':''}><i class="ti ti-chevron-right"></i></button>
-        <span class="year-xp">${yearXP.toLocaleString('de')} XP gesamt</span>
+        <span class="year-xp">${yearXP.toLocaleString(locale())} ${t('hm_xp_total')}</span>
       </div>`;
     }
     const year=hmYear;
     let html=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">`;
     for(let mo=0;mo<12;mo++){
       const mStart=new Date(year,mo,1);
-      const mName=mStart.toLocaleString('de',{month:'short'});
+      const mName=mStart.toLocaleString(locale(),{month:'short'});
       const rawFirst=mStart.getDay();
       const offset=(rawFirst===0?6:rawFirst-1);
       const cells=[];
@@ -680,7 +817,7 @@ function renderHeatmap(mode){
       }
       html+=`<div><div style="font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px">${mName}</div>`;
       html+=`<div style="display:flex;gap:2px;margin-bottom:3px">`;
-      ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d=>{html+=`<div style="width:9px;font-size:7px;color:var(--color-text-tertiary);text-align:center">${d}</div>`;});
+      weekdayLetters().forEach(d=>{html+=`<div style="width:9px;font-size:7px;color:var(--color-text-tertiary);text-align:center">${d}</div>`;});
       html+=`</div><div style="display:grid;grid-template-columns:repeat(7,9px);gap:2px">`;
       cells.forEach(day=>{
         if(!day){html+=`<div style="width:9px;height:9px"></div>`;return;}
@@ -703,7 +840,7 @@ function renderHeatmap(mode){
     while(cur<=end){
       const ds=localDateStr(cur);
       if(cur.getDay()===0&&week.length>0){weeks.push(week);week=[];wIdx++;}
-      const mo=cur.getMonth();if(mPos[mo]===undefined)mPos[mo]={idx:wIdx,lbl:cur.toLocaleString('de',{month:'short'})};
+      const mo=cur.getMonth();if(mPos[mo]===undefined)mPos[mo]={idx:wIdx,lbl:cur.toLocaleString(locale(),{month:'short'})};
       week.push({date:ds,xp:dayMap[ds]||0,we:isWeekend(ds)});
       cur.setDate(cur.getDate()+1);
     }
@@ -712,7 +849,7 @@ function renderHeatmap(mode){
     let mHtml=`<div style="display:flex;margin-left:22px;margin-bottom:3px;position:relative;height:13px;">`;
     mLabels.forEach(m=>{mHtml+=`<span style="position:absolute;left:${m.idx*(cw+g)}px;font-size:9px;color:var(--color-text-tertiary)">${m.lbl}</span>`;});
     mHtml+='</div>';
-    const dls=['','Mo','','Mi','','Fr',''];
+    const _wd=weekdayLetters();const dls=['',_wd[0],'',_wd[2],'',_wd[4],''];
     let dHtml=`<div style="display:flex;flex-direction:column;gap:${g}px;margin-right:4px;">`;
     dls.forEach(d=>{dHtml+=`<div style="font-size:9px;color:var(--color-text-tertiary);height:${cw}px;line-height:${cw}px;width:16px;text-align:right">${d}</div>`;});
     dHtml+='</div>';
@@ -739,8 +876,8 @@ function renderHeatmap(mode){
 function showTip(e,el){
   const tip=document.getElementById('tip');
   const xp=parseInt(el.dataset.xp)||0;const we=el.dataset.we==='true';
-  const d=new Date(el.dataset.date+'T12:00:00').toLocaleDateString('de',{day:'numeric',month:'short',year:'numeric'});
-  tip.textContent=xp>0?`${d} \u00b7 ${xp.toLocaleString('de')} XP${we?' \u00b7 x2 WE':''}`:we?`${d} \u00b7 Wochenende x2 XP`:`${d} \u00b7 keine Aktivit\u00e4t`;
+  const d=new Date(el.dataset.date+'T12:00:00').toLocaleDateString(locale(),{day:'numeric',month:'short',year:'numeric'});
+  tip.textContent=xp>0?`${d} \u00b7 ${xp.toLocaleString(locale())} XP${we?' \u00b7 x2 WE':''}`:we?`${d} \u00b7 ${t('tip_weekend')}`:`${d} \u00b7 ${t('tip_no_activity')}`;
   tip.style.display='block';
   tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY-30)+'px';
 }
@@ -748,11 +885,11 @@ function hideTip(){document.getElementById('tip').style.display='none';}
 
 function renderLog(){
   const el=document.getElementById('tab-log');
-  if(!S.skills.length){el.innerHTML=`<div class="empty"><i class="ti ti-player-play" style="font-size:32px;display:block;margin-bottom:8px;opacity:.3"></i>Erstelle zuerst einen Skill im Home-Tab.</div>`;return;}
+  if(!S.skills.length){el.innerHTML=`<div class="empty"><i class="ti ti-player-play" style="font-size:32px;display:block;margin-bottom:8px;opacity:.3"></i>${t('log_need_skill')}</div>`;return;}
   el.innerHTML=`<div class="log-card">
     <div class="log-mode-tabs">
-      <button class="log-mode-tab${logMode==='manual'?' active':''}" onclick="setLogMode('manual')"><i class="ti ti-pencil"></i>Manuell</button>
-      <button class="log-mode-tab${logMode==='timer'?' active':''}" onclick="setLogMode('timer')"><i class="ti ti-clock"></i>Stoppuhr</button>
+      <button class="log-mode-tab${logMode==='manual'?' active':''}" onclick="setLogMode('manual')"><i class="ti ti-pencil"></i>${t('log_manual')}</button>
+      <button class="log-mode-tab${logMode==='timer'?' active':''}" onclick="setLogMode('timer')"><i class="ti ti-clock"></i>${t('log_timer')}</button>
     </div>
     <div id="log-body"></div>
   </div>`;
@@ -769,19 +906,19 @@ function renderManualLog(el){
   const opts=S.skills.map(s=>`<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
   const we=isWeekend(today());
   el.innerHTML=`
-    ${we?`<div style="margin-bottom:12px"><span class="bonus-badge"><i class="ti ti-bolt" style="font-size:11px"></i> x2 XP Wochenende!</span></div>`:''}
+    ${we?`<div style="margin-bottom:12px"><span class="bonus-badge"><i class="ti ti-bolt" style="font-size:11px"></i> ${t('weekend_bonus')}</span></div>`:''}
     <div class="form-row">
-      <div class="fg"><label>Skill</label><select id="ls">${opts}</select></div>
-      <div class="fg" style="max-width:100px"><label>Stunden</label><input type="number" id="lh" min=".25" max="24" step=".25" value="1"></div>
-      <div class="fg" style="max-width:135px"><label>Datum</label><input type="date" id="ld" value="${today()}"></div>
+      <div class="fg"><label>${t('field_skill')}</label><select id="ls">${opts}</select></div>
+      <div class="fg" style="max-width:100px"><label>${t('field_hours')}</label><input type="number" id="lh" min=".25" max="24" step=".25" value="1"></div>
+      <div class="fg" style="max-width:135px"><label>${t('field_date')}</label><input type="date" id="ld" value="${today()}"></div>
     </div>
-    <div class="fg" style="margin-bottom:12px"><label>Notiz (optional)</label><input type="text" id="ln" placeholder="Was hast du gemacht?"></div>
+    <div class="fg" style="margin-bottom:12px"><label>${t('field_note_opt')}</label><input type="text" id="ln" placeholder="${t('note_ph')}"></div>
     <div style="display:flex;align-items:center;gap:14px">
-      <button class="log-btn" onclick="logTime()"><i class="ti ti-plus" style="font-size:13px;vertical-align:-1px"></i> Eintragen</button>
-      <span id="lxp" style="font-size:12px;color:var(--color-text-secondary)">= ${xpH(1,today()).toLocaleString('de')} XP</span>
+      <button class="log-btn" onclick="logTime()"><i class="ti ti-plus" style="font-size:13px;vertical-align:-1px"></i> ${t('btn_log')}</button>
+      <span id="lxp" style="font-size:12px;color:var(--color-text-secondary)">= ${xpH(1,today()).toLocaleString(locale())} XP</span>
     </div>
-    <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px">1h = 100 XP \u00b7 Wochenende = 200 XP</div>`;
-  function upd(){const h=parseFloat(document.getElementById('lh').value)||0;const d=document.getElementById('ld').value||today();document.getElementById('lxp').textContent=`= ${xpH(h,d).toLocaleString('de')} XP${isWeekend(d)?' \u26A1':''}`;}
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-top:6px">${t('xp_formula')}</div>`;
+  function upd(){const h=parseFloat(document.getElementById('lh').value)||0;const d=document.getElementById('ld').value||today();document.getElementById('lxp').textContent=`= ${xpH(h,d).toLocaleString(locale())} XP${isWeekend(d)?' \u26A1':''}`;}
   document.getElementById('lh').addEventListener('input',upd);
   document.getElementById('ld').addEventListener('input',upd);
 }
@@ -798,21 +935,21 @@ function renderTimerLog(el){
   const isRunning=timerState.running;
   let lapsHtml='';
   if(timerState.laps.length>0){
-    lapsHtml=`<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px">Runden</div>
-    <div class="laps-list">${timerState.laps.map((l,i)=>`<div class="lap-item"><span style="color:var(--color-text-secondary)">Runde ${i+1}</span><span>${l}</span></div>`).join('')}</div></div>`;
+    lapsHtml=`<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px">${t('timer_rounds')}</div>
+    <div class="laps-list">${timerState.laps.map((l,i)=>`<div class="lap-item"><span style="color:var(--color-text-secondary)">${t('timer_round')} ${i+1}</span><span>${l}</span></div>`).join('')}</div></div>`;
   }
   let saveHtml='';
   if(sec>0&&!isRunning){
     saveHtml=`<div class="timer-save-area">
-      <div style="font-size:12px;font-weight:500;margin-bottom:8px">Sitzung speichern</div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:8px">${t('timer_save_session')}</div>
       <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
-        <div class="fg" style="min-width:0"><label>Notiz</label><input type="text" id="tnote" placeholder="Was hast du gemacht?" value="${timerState.note}"></div>
-        <button class="log-btn" onclick="saveTimerSession()"><i class="ti ti-device-floppy" style="font-size:13px;vertical-align:-1px"></i> Speichern (+${xpPrev.toLocaleString('de')} XP${we?' \u26A1':''})</button>
+        <div class="fg" style="min-width:0"><label>${t('field_note')}</label><input type="text" id="tnote" placeholder="${t('note_ph')}" value="${timerState.note}"></div>
+        <button class="log-btn" onclick="saveTimerSession()"><i class="ti ti-device-floppy" style="font-size:13px;vertical-align:-1px"></i> ${t('btn_save')} (+${xpPrev.toLocaleString(locale())} XP${we?' \u26A1':''})</button>
       </div>
     </div>`;
   }
   el.innerHTML=`
-    <div class="fg" style="margin-bottom:12px"><label>Skill</label><select id="tskill" onchange="timerState.skillId=this.value;renderLogBody()" ${isRunning?'disabled':''}>${opts}</select></div>
+    <div class="fg" style="margin-bottom:12px"><label>${t('field_skill')}</label><select id="tskill" onchange="timerState.skillId=this.value;renderLogBody()" ${isRunning?'disabled':''}>${opts}</select></div>
     <div style="display:flex;justify-content:center;margin-bottom:6px">
       <svg width="140" height="140" viewBox="0 0 140 140">
         <circle cx="70" cy="70" r="60" fill="none" stroke="${ringColor}22" stroke-width="8"/>
@@ -820,7 +957,7 @@ function renderTimerLog(el){
           stroke-dasharray="377" stroke-dashoffset="${377-((sec%3600)/3600)*377}" transform="rotate(-90 70 70)"
           style="${isRunning?'transition:stroke-dashoffset 1s linear':''}"/>
         <text x="70" y="66" text-anchor="middle" font-size="22" font-weight="500" fill="${ringColor}" font-family="sans-serif">${timeStr}</text>
-        <text x="70" y="84" text-anchor="middle" font-size="10" fill="${ringColor}88" font-family="sans-serif">${isRunning?'l\u00e4uft...':sec>0?'pausiert':'bereit'}</text>
+        <text x="70" y="84" text-anchor="middle" font-size="10" fill="${ringColor}88" font-family="sans-serif">${isRunning?t('timer_running'):sec>0?t('timer_paused'):t('timer_ready')}</text>
       </svg>
     </div>
     <div class="timer-controls">
@@ -828,7 +965,7 @@ function renderTimerLog(el){
       <button class="t-btn primary${isRunning?' running':''}" onclick="toggleTimer()"><i class="ti ti-${isRunning?'player-pause':'player-play'}"></i></button>
       <button class="t-btn" onclick="addLap()" ${!isRunning?'disabled style="opacity:.3"':''}><i class="ti ti-flag"></i></button>
     </div>
-    ${we&&sec>0?`<div style="text-align:center;margin-bottom:10px"><span class="bonus-badge"><i class="ti ti-bolt" style="font-size:11px"></i> x2 XP Wochenende!</span></div>`:''}
+    ${we&&sec>0?`<div style="text-align:center;margin-bottom:10px"><span class="bonus-badge"><i class="ti ti-bolt" style="font-size:11px"></i> ${t('weekend_bonus')}</span></div>`:''}
     ${lapsHtml}${saveHtml}`;
   if(!timerState.skillId&&S.skills.length)timerState.skillId=S.skills[0].id;
 }
@@ -860,20 +997,20 @@ function addLap(){
   const hh=Math.floor(sec/3600),mm=Math.floor((sec%3600)/60),ss=sec%60;
   timerState.laps.push(`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`);
   const ll=document.querySelector('.laps-list');
-  if(ll){const li=document.createElement('div');li.className='lap-item';li.innerHTML=`<span style="color:var(--color-text-secondary)">Runde ${timerState.laps.length}</span><span>${timerState.laps[timerState.laps.length-1]}</span>`;ll.appendChild(li);ll.scrollTop=ll.scrollHeight;}
+  if(ll){const li=document.createElement('div');li.className='lap-item';li.innerHTML=`<span style="color:var(--color-text-secondary)">${t('timer_round')} ${timerState.laps.length}</span><span>${timerState.laps[timerState.laps.length-1]}</span>`;ll.appendChild(li);ll.scrollTop=ll.scrollHeight;}
   else renderLogBody();
 }
 
 function saveTimerSession(){
-  const sec=timerState.elapsed;if(sec<60)return toast('Mindestens 1 Minute erforderlich');
+  const sec=timerState.elapsed;if(sec<60)return toast(t('timer_min1'));
   const hours=Math.round((sec/3600)*4)/4;
   const note=(document.getElementById('tnote')?.value||'').trim();
   const skillId=timerState.skillId||S.skills[0]?.id;if(!skillId)return;
   const xp=xpH(sec/3600,today());
-  S.logs.push({id:Date.now().toString(),skillId,hours,xp,date:today(),note:note+(timerState.laps.length?` \u00b7 ${timerState.laps.length} Runden`:''),weekend:isWeekend(today()),timed:true});
+  S.logs.push({id:Date.now().toString(),skillId,hours,xp,date:today(),note:note+(timerState.laps.length?` \u00b7 ${timerState.laps.length} ${t('timer_rounds')}`:''),weekend:isWeekend(today()),timed:true});
   save();
   const sk=S.skills.find(s=>s.id===skillId);
-  toast(`+${xp.toLocaleString('de')} XP f\u00fcr ${sk?sk.icon+' '+sk.name:'?'}${isWeekend(today())?' \u26A1':''}`);
+  toast(xpForToast(xp.toLocaleString(locale()),(sk?sk.icon+' '+sk.name:'?'))+(isWeekend(today())?' \u26A1':''));
   timerState={running:false,startTs:null,elapsed:0,laps:[],skillId:skillId,note:''};
   if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
   checkNewAchievements();
@@ -890,14 +1027,14 @@ function logTime(){
   S.logs.push({id:Date.now().toString(),skillId,hours,xp,date,note,weekend:isWeekend(date)});
   save();
   const sk=S.skills.find(s=>s.id===skillId);
-  toast(`+${xp.toLocaleString('de')} XP f\u00fcr ${sk?sk.icon+' '+sk.name:'?'}${isWeekend(date)?' \u26A1':''}`);
+  toast(xpForToast(xp.toLocaleString(locale()),(sk?sk.icon+' '+sk.name:'?'))+(isWeekend(date)?' \u26A1':''));
   checkNewAchievements();
   setTimeout(()=>setTab('home'),400);
 }
 
 function renderStats(){
   const el=document.getElementById('tab-stats');
-  if(!S.logs.length){el.innerHTML=`<div class="empty">Noch keine Daten.</div>`;return;}
+  if(!S.logs.length){el.innerHTML=`<div class="empty">${t('stats_no_data')}</div>`;return;}
   const tc=CUR_CHART_TEXT;const gc=CUR_CHART_GRID;const ac=CUR_ACCENT;
   const todayD=new Date();todayD.setHours(0,0,0,0);
   const last30=[];for(let i=29;i>=0;i--){const d=new Date(todayD);d.setDate(d.getDate()-i);last30.push(localDateStr(d));}
@@ -905,39 +1042,39 @@ function renderStats(){
   const bgColors=last30.map(d=>isWeekend(d)?'#BA7517':ac);
   const skXP=S.skills.map(sk=>({name:sk.name,icon:sk.icon,color:sk.color,xp:S.logs.filter(l=>l.skillId===sk.id).reduce((s,l)=>s+l.xp,0)})).filter(s=>s.xp>0).sort((a,b)=>b.xp-a.xp);
   const wkMap={};S.logs.forEach(l=>{const dn=['So','Mo','Di','Mi','Do','Fr','Sa'][new Date(l.date+'T12:00:00').getDay()];wkMap[dn]=(wkMap[dn]||0)+l.xp;});
-  const wkDays=['Mo','Di','Mi','Do','Fr','Sa','So'];const wkData=wkDays.map(d=>wkMap[d]||0);
+  const wkDays=['Mo','Di','Mi','Do','Fr','Sa','So'];const wkData=wkDays.map(d=>wkMap[d]||0);const wkLabels=weekdayLetters();
   const wkColors=[ac,ac,ac,ac,ac,'#BA7517','#BA7517'];
   const streak=calcStreak(S.logs);const longest=calcLongestStreak(S.logs);
   const totalDays=[...new Set(S.logs.map(l=>l.date))].length;
   const totalXP=S.logs.reduce((s,l)=>s+l.xp,0);
   const avgXP=totalDays>0?Math.round(totalXP/totalDays):0;
-  const legItems=skXP.map(s=>`<span style="display:flex;align-items:center;gap:4px"><span class="ch-sq" style="background:${s.color}"></span>${s.icon} ${s.name} \u00b7 ${s.xp.toLocaleString('de')} XP</span>`).join('');
+  const legItems=skXP.map(s=>`<span style="display:flex;align-items:center;gap:4px"><span class="ch-sq" style="background:${s.color}"></span>${s.icon} ${s.name} \u00b7 ${s.xp.toLocaleString(locale())} XP</span>`).join('');
   el.innerHTML=`<div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
-    <div class="stat-card"><div class="stat-lbl">Streak</div><div class="stat-val" style="color:#D85A30">${streak} <span style="font-size:13px;color:var(--color-text-secondary)">Tage</span></div></div>
-    <div class="stat-card"><div class="stat-lbl">L\u00e4ngster Streak</div><div class="stat-val">${longest} <span style="font-size:13px;color:var(--color-text-secondary)">Tage</span></div></div>
-    <div class="stat-card"><div class="stat-lbl">\u00d8 XP / Aktivtag</div><div class="stat-val">${avgXP.toLocaleString('de')}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('stat_streak')}</div><div class="stat-val" style="color:#D85A30">${streak} <span style="font-size:13px;color:var(--color-text-secondary)">${t('days_word')}</span></div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('streak_longest')}</div><div class="stat-val">${longest} <span style="font-size:13px;color:var(--color-text-secondary)">${t('days_word')}</span></div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('stat_avg')}</div><div class="stat-val">${avgXP.toLocaleString(locale())}</div></div>
   </div>
   <div class="card" style="margin-bottom:1rem">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div class="sec-lbl" style="margin-bottom:0">XP letzte 30 Tage</div>
+      <div class="sec-lbl" style="margin-bottom:0">${t('stat_xp30')}</div>
       <div style="display:flex;gap:10px;font-size:11px;color:var(--color-text-secondary)">
-        <span><span class="ch-sq" style="background:${ac}"></span>Wochentag</span>
-        <span><span class="ch-sq" style="background:#BA7517"></span>Wochenende</span>
+        <span><span class="ch-sq" style="background:${ac}"></span>${t('weekday_word')}</span>
+        <span><span class="ch-sq" style="background:#BA7517"></span>${t('weekend_word')}</span>
       </div>
     </div>
     <div class="chart-wrap" style="height:160px"><canvas id="ch1"></canvas></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
-    <div class="card"><div class="sec-lbl" style="margin-bottom:10px">XP nach Wochentag</div><div class="chart-wrap" style="height:160px"><canvas id="ch2"></canvas></div></div>
-    <div class="card"><div class="sec-lbl" style="margin-bottom:6px">XP pro Skill</div><div class="ch-legend">${legItems}</div><div class="chart-wrap" style="height:130px"><canvas id="ch3"></canvas></div></div>
+    <div class="card"><div class="sec-lbl" style="margin-bottom:10px">${t('stat_xp_weekday')}</div><div class="chart-wrap" style="height:160px"><canvas id="ch2"></canvas></div></div>
+    <div class="card"><div class="sec-lbl" style="margin-bottom:6px">${t('stat_xp_skill')}</div><div class="ch-legend">${legItems}</div><div class="chart-wrap" style="height:130px"><canvas id="ch3"></canvas></div></div>
   </div>
   <div class="card" style="margin-bottom:1rem">
-    <div class="sec-lbl" style="margin-bottom:10px">XP-Verlauf pro Skill (kumuliert)</div>
+    <div class="sec-lbl" style="margin-bottom:10px">${t('stat_xp_cumulative')}</div>
     <div class="ch-legend">${legItems}</div>
     <div class="chart-wrap" style="height:200px"><canvas id="chLine"></canvas></div>
   </div>
   ${skXP.length>=3?`<div class="card" style="margin-bottom:1rem">
-    <div class="sec-lbl" style="margin-bottom:10px">Skill-Balance</div>
+    <div class="sec-lbl" style="margin-bottom:10px">${t('stat_balance')}</div>
     <div class="chart-wrap" style="height:240px"><canvas id="chRadar"></canvas></div>
   </div>`:''}
   ${forecastHTML()}`;
@@ -945,9 +1082,9 @@ function renderStats(){
     if(chartXP){chartXP.destroy();chartXP=null;}if(chartWeek){chartWeek.destroy();chartWeek=null;}if(chartSkill){chartSkill.destroy();chartSkill=null;}
     if(typeof Chart==='undefined')return;
     const bo={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc,font:{size:10}},grid:{color:gc}},y:{ticks:{color:tc,font:{size:10}},grid:{color:gc}}}};
-    const lbls30=last30.map(d=>new Date(d+'T12:00:00').toLocaleDateString('de',{day:'2-digit',month:'2-digit'}));
+    const lbls30=last30.map(d=>new Date(d+'T12:00:00').toLocaleDateString(locale(),{day:'2-digit',month:'2-digit'}));
     chartXP=new Chart(document.getElementById('ch1'),{type:'bar',data:{labels:lbls30,datasets:[{label:'XP',data:xpByDay,backgroundColor:bgColors,borderRadius:3}]},options:{...bo,scales:{x:{ticks:{color:tc,font:{size:9},maxRotation:45,autoSkip:true,maxTicksLimit:10},grid:{color:gc}},y:{ticks:{color:tc,font:{size:10}},grid:{color:gc}}}}});
-    chartWeek=new Chart(document.getElementById('ch2'),{type:'bar',data:{labels:wkDays,datasets:[{label:'XP',data:wkData,backgroundColor:wkColors,borderRadius:3}]},options:{...bo}});
+    chartWeek=new Chart(document.getElementById('ch2'),{type:'bar',data:{labels:wkLabels,datasets:[{label:'XP',data:wkData,backgroundColor:wkColors,borderRadius:3}]},options:{...bo}});
     if(skXP.length)chartSkill=new Chart(document.getElementById('ch3'),{type:'doughnut',data:{labels:skXP.map(s=>s.name),datasets:[{data:skXP.map(s=>s.xp),backgroundColor:skXP.map(s=>s.color),borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'60%'}});
     if(chartLine){chartLine.destroy();chartLine=null;}if(chartRadar){chartRadar.destroy();chartRadar=null;}
     // Liniendiagramm: kumulierte XP pro Skill ueber Zeit
@@ -968,7 +1105,7 @@ function renderStats(){
         const out=labelDates.map(d=>{while(si<sorted.length&&sorted[si]<=d){cum+=byDate[sorted[si]];si++;}return cum;});
         return {label:sk.name,data:out,borderColor:sk.color,backgroundColor:sk.color+'22',borderWidth:2,pointRadius:0,tension:.25,fill:false};
       });
-      const lblShort=labelDates.map(d=>new Date(d+'T12:00:00').toLocaleDateString('de',{day:'2-digit',month:'2-digit'}));
+      const lblShort=labelDates.map(d=>new Date(d+'T12:00:00').toLocaleDateString(locale(),{day:'2-digit',month:'2-digit'}));
       chartLine=new Chart(lineCanvas,{type:'line',data:{labels:lblShort,datasets},options:{...bo,interaction:{mode:'index',intersect:false},scales:{x:{ticks:{color:tc,font:{size:9},maxRotation:45,autoSkip:true,maxTicksLimit:10},grid:{color:gc}},y:{ticks:{color:tc,font:{size:10}},grid:{color:gc}}}}});
     }
     // Radar: Skill-Balance (XP, normalisiert)
@@ -985,12 +1122,12 @@ function forecastHTML(){
     if(skXP<=0)return null;
     const f=forecastForSkill(sk);
     let eta,sub;
-    if(f.maxed){eta='MAX';sub='H\u00f6chstes Level erreicht';}
-    else if(f.weeks===null){eta='\u2014';sub=`${f.need.toLocaleString('de')} XP bis ${f.lv.next.name} \u00b7 zuletzt inaktiv`;}
+    if(f.maxed){eta=t('max');sub=t('forecast_max');}
+    else if(f.weeks===null){eta='\u2014';sub=needText(f.need.toLocaleString(locale()),lvlName(f.lv.next))+' \u00b7 '+t('forecast_inactive');}
     else{
       const w=f.weeks;
-      if(w<1)eta='< 1 Wo';else if(w<104)eta=`~${Math.round(w)} Wo`;else eta=`~${Math.round(w/52)} J`;
-      sub=`${f.need.toLocaleString('de')} XP bis ${f.lv.next.name}`;
+      if(w<1)eta=t('lt1wk');else if(w<104)eta=`~${Math.round(w)} ${t('wk_short')}`;else eta=`~${Math.round(w/52)} ${t('yr_short')}`;
+      sub=needText(f.need.toLocaleString(locale()),lvlName(f.lv.next));
     }
     return `<div class="forecast-item">
       <div class="forecast-icon">${sk.icon}</div>
@@ -1000,8 +1137,8 @@ function forecastHTML(){
   }).filter(Boolean).join('');
   if(!items)return '';
   return `<div class="card" style="margin-bottom:1rem">
-    <div class="sec-lbl" style="margin-bottom:4px">Prognose</div>
-    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px">Gesch\u00e4tzt nach deinem Tempo der letzten 30 Tage</div>
+    <div class="sec-lbl" style="margin-bottom:4px">${t('forecast_title')}</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px">${t('forecast_sub')}</div>
     ${items}
   </div>`;
 }
@@ -1009,17 +1146,17 @@ function forecastHTML(){
 function renderHistory(){
   const el=document.getElementById('tab-history');
   const sorted=[...S.logs].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
-  if(!sorted.length){el.innerHTML=`<div class="empty">Noch keine Eintr\u00e4ge.</div>`;return;}
+  if(!sorted.length){el.innerHTML=`<div class="empty">${t('hist_none')}</div>`;return;}
   el.innerHTML=sorted.map(l=>{
     const sk=S.skills.find(s=>s.id===l.skillId);
-    const d=new Date(l.date+'T12:00:00').toLocaleDateString('de',{day:'numeric',month:'short',year:'numeric'});
+    const d=new Date(l.date+'T12:00:00').toLocaleDateString(locale(),{day:'numeric',month:'short',year:'numeric'});
     return `<div class="hist-item">
       <div style="font-size:18px;flex-shrink:0">${sk?sk.icon:'\u2753'}</div>
       <div class="hist-info">
-        <div class="hist-sk">${sk?sk.name:'Gel\u00f6schter Skill'}${l.weekend?` <span style="font-size:10px;color:#BA7517;font-weight:500">x2 WE</span>`:''}${l.timed?` <span style="font-size:10px;color:var(--color-text-secondary)"><i class="ti ti-clock" style="font-size:10px"></i></span>`:''}</div>
+        <div class="hist-sk">${sk?sk.name:t('hist_deleted')}${l.weekend?` <span style="font-size:10px;color:#BA7517;font-weight:500">x2 WE</span>`:''}${l.timed?` <span style="font-size:10px;color:var(--color-text-secondary)"><i class="ti ti-clock" style="font-size:10px"></i></span>`:''}</div>
         <div class="hist-meta">${d}${l.hours>0?' \u00b7 '+fmtDur(l.hours):''}${l.note?' \u00b7 '+l.note:''}</div>
       </div>
-      <div class="hist-xp">+${l.xp.toLocaleString('de')} XP</div>
+      <div class="hist-xp">+${l.xp.toLocaleString(locale())} XP</div>
       <button class="hist-del" onclick="delLog('${l.id}')"><i class="ti ti-trash"></i></button>
     </div>`;
   }).join('');
@@ -1039,43 +1176,45 @@ function renderSettings(){
   const totalXP=S.logs.reduce((s,l)=>s+l.xp,0);
   const isElectron=!!window.electronAPI;
   const updateSection=isElectron?`
-    <div class="sec-lbl">Updates</div>
+    <div class="sec-lbl">${t('set_updates')}</div>
     <div class="card" style="margin-bottom:1rem">
       <div id="update-info" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
         <div>
           <div style="font-size:13px;font-weight:500">Skill Tracker</div>
-          <div id="update-ver" style="font-size:11px;color:var(--color-text-secondary)">Version wird geladen...</div>
+          <div id="update-ver" style="font-size:11px;color:var(--color-text-secondary)">${t('update_loading_ver')}</div>
         </div>
         <button class="settings-btn" style="width:auto;padding:8px 14px" id="update-btn" onclick="manualCheckUpdate()">
-          <i class="ti ti-refresh"></i> Auf Updates prüfen
+          <i class="ti ti-refresh"></i> ${t('set_check_updates')}
         </button>
       </div>
       <div id="update-bar" style="display:none;margin-top:10px">
-        <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px" id="update-bar-label">Wird heruntergeladen...</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px" id="update-bar-label">${t('update_downloading')}</div>
         <div style="height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden">
           <div id="update-bar-fill" style="height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .3s"></div>
         </div>
       </div>
     </div>`:'';
   const dataText=isElectron
-    ?'Daten werden lokal gespeichert und bleiben bei Updates erhalten.'
-    :'Deine Daten liegen lokal im Browser. <b>Vor einem Update</b> exportierst du sie als Datei, \u00f6ffnest die neue Version und importierst sie wieder.';
+    ?t('data_electron')
+    :t('data_browser');
   el.innerHTML=`
-    <div class="sec-lbl">Design</div>
+    <div class="sec-lbl">${t('set_design')}</div>
     <div class="theme-grid">${themeOpts}</div>
+    <div class="sec-lbl">${t('set_language')}</div>
+    <div class="theme-grid"><div class="theme-opt${LANG==='de'?' sel':''}" onclick="setLang('de')"><span class="theme-name">\u{1F1E9}\u{1F1EA} Deutsch</span></div><div class="theme-opt${LANG==='en'?' sel':''}" onclick="setLang('en')"><span class="theme-name">\u{1F1EC}\u{1F1E7} English</span></div></div>
     ${updateSection}
-    <div class="sec-lbl">Daten</div>
+    <div class="sec-lbl">${t('set_data')}</div>
     <div class="card" style="margin-bottom:1rem">
       <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px;line-height:1.5">${dataText}</div>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <button class="settings-btn" onclick="exportData()"><i class="ti ti-download"></i> Backup exportieren (.json)</button>
-        <button class="settings-btn" onclick="triggerImport()"><i class="ti ti-upload"></i> Backup importieren</button>
+        <button class="settings-btn" onclick="exportData()"><i class="ti ti-download"></i> ${t('btn_export')}</button>
+        <button class="settings-btn" onclick="triggerImport()"><i class="ti ti-upload"></i> ${t('btn_import')}</button>
       </div>
-      <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:10px">${S.skills.length} Skills \u00b7 ${S.logs.length} Eintr\u00e4ge \u00b7 ${totalXP.toLocaleString('de')} XP gespeichert</div>
+      <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:10px">${S.skills.length} Skills \u00b7 ${S.logs.length} ${LANG==='en'?'entries':'Eintr\u00e4ge'} \u00b7 ${totalXP.toLocaleString(locale())} XP ${LANG==='en'?'stored':'gespeichert'}</div>
     </div>
-    <div class="sec-lbl">Gefahrenzone</div>
+    <div class="sec-lbl">${t('set_danger')}</div>
     <div class="card">
-      <button class="settings-btn" style="color:#E24B4A;border-color:#E24B4A55" onclick="resetAll()"><i class="ti ti-alert-triangle"></i> Alle Daten l\u00f6schen</button>
+      <button class="settings-btn" style="color:#E24B4A;border-color:#E24B4A55" onclick="resetAll()"><i class="ti ti-alert-triangle"></i> ${t('btn_delete_all')}</button>
     </div>`;
 
   // Version laden
@@ -1093,8 +1232,8 @@ function exportData(){
   if(window.electronAPI){
     // Electron: nativer Speichern-Dialog
     window.electronAPI.saveFile(defaultName,data).then(r=>{
-      if(r.ok)toast('Backup gespeichert: '+r.filePath.split(/[\\/]/).pop());
-    }).catch(e=>alert('Export fehlgeschlagen: '+e.message));
+      if(r.ok)toast(t('backup_saved')+r.filePath.split(/[\\/]/).pop());
+    }).catch(e=>alert(t('export_failed')+e.message));
   } else {
     // Browser-Fallback
     try{
@@ -1104,8 +1243,8 @@ function exportData(){
       a.href=url;a.download=defaultName;
       document.body.appendChild(a);a.click();a.remove();
       setTimeout(()=>URL.revokeObjectURL(url),1000);
-      toast('Backup heruntergeladen');
-    }catch(e){alert('Export fehlgeschlagen: '+e.message);}
+      toast(t('backup_dl'));
+    }catch(e){alert(t('export_failed')+e.message);}
   }
 }
 
@@ -1116,15 +1255,15 @@ function triggerImport(){
       if(!r.ok)return;
       try{
         const d=JSON.parse(r.content);
-        if(!d||!Array.isArray(d.skills)||!Array.isArray(d.logs))throw new Error('Datei hat kein g\u00fcltiges Format');
-        if(!confirm('Achtung: Deine aktuellen Daten werden komplett ersetzt. Fortfahren?'))return;
+        if(!d||!Array.isArray(d.skills)||!Array.isArray(d.logs))throw new Error(t('import_bad'));
+        if(!confirm(t('import_confirm')))return;
         S={skills:d.skills,logs:d.logs};
         S.skills.forEach((sk,i)=>{if(!sk.icon)sk.icon='\u{1F3AF}';if(!sk.color)sk.color=COLORS[i%COLORS.length];});
         save();
-        toast(`Importiert: ${S.skills.length} Skills, ${S.logs.length} Eintr\u00e4ge`);
+        toast(`${LANG==='en'?'Imported':'Importiert'}: ${S.skills.length} Skills, ${S.logs.length} ${LANG==='en'?'entries':'Eintr\u00e4ge'}`);
         renderSettings();
-      }catch(err){alert('Import fehlgeschlagen: '+err.message);}
-    }).catch(e=>alert('Import fehlgeschlagen: '+e.message));
+      }catch(err){alert(t('import_failed')+err.message);}
+    }).catch(e=>alert(t('import_failed')+e.message));
   } else {
     document.getElementById('import-file').click();
   }
@@ -1136,36 +1275,36 @@ function importData(input){
   reader.onload=ev=>{
     try{
       const d=JSON.parse(ev.target.result);
-      if(!d||!Array.isArray(d.skills)||!Array.isArray(d.logs))throw new Error('Datei hat kein g\u00fcltiges Format');
-      if(!confirm('Achtung: Deine aktuellen Daten werden komplett ersetzt. Fortfahren?')){input.value='';return;}
+      if(!d||!Array.isArray(d.skills)||!Array.isArray(d.logs))throw new Error(t('import_bad'));
+      if(!confirm(t('import_confirm'))){input.value='';return;}
       S={skills:d.skills,logs:d.logs};
       S.skills.forEach((sk,i)=>{if(!sk.icon)sk.icon='\u{1F3AF}';if(!sk.color)sk.color=COLORS[i%COLORS.length];});
       save();
-      toast(`Importiert: ${S.skills.length} Skills, ${S.logs.length} Eintr\u00e4ge`);
+      toast(`${LANG==='en'?'Imported':'Importiert'}: ${S.skills.length} Skills, ${S.logs.length} ${LANG==='en'?'entries':'Eintr\u00e4ge'}`);
       renderSettings();
-    }catch(err){alert('Import fehlgeschlagen: '+err.message);}
+    }catch(err){alert(t('import_failed')+err.message);}
     input.value='';
   };
   reader.readAsText(file);
 }
 
 function resetAll(){
-  if(!confirm('Wirklich ALLE Skills und Eintr\u00e4ge unwiderruflich l\u00f6schen?'))return;
-  if(!confirm('Bist du sicher? Das kann nicht r\u00fcckg\u00e4ngig gemacht werden. (Tipp: vorher exportieren!)'))return;
-  S={skills:[],logs:[]};save();toast('Alle Daten gel\u00f6scht');renderSettings();
+  if(!confirm(t('reset_c1')))return;
+  if(!confirm(t('reset_c2')))return;
+  S={skills:[],logs:[]};save();toast(t('reset_done'));renderSettings();
 }
 
 function showAddSkill(){modalStep=1;modalData={};renderModal();}
 function renderModal(){
   const mr=document.getElementById('modal-root');
   if(modalStep===1){
-    const ph=PRESETS.map(p=>`<div class="preset-item${modalData.presetId===p.id?' selected':''}" onclick="selectPreset('${p.id}')"><span class="preset-icon">${p.icon}</span><span class="preset-name">${p.name}</span></div>`).join('');
+    const ph=PRESETS.map(p=>`<div class="preset-item${modalData.presetId===p.id?' selected':''}" onclick="selectPreset('${p.id}')"><span class="preset-icon">${p.icon}</span><span class="preset-name">${presetName(p)}</span></div>`).join('');
     mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
       <div class="step-dots"><div class="step-dot on"></div><div class="step-dot"></div></div>
-      <h3>Skill ausw\u00e4hlen</h3>
+      <h3>${t('modal_choose')}</h3>
       <div class="preset-grid">${ph}</div>
-      <div class="custom-row${modalData.presetId==='custom'?' selected':''}" onclick="selectPreset('custom')"><i class="ti ti-plus" style="font-size:18px"></i><span>Custom Skill hinzuf\u00fcgen</span></div>
-      <div class="modal-btns"><button class="btn-cancel" onclick="closeModal()">Abbrechen</button><button class="btn-ok" onclick="goStep2()" ${!modalData.presetId?'disabled style="opacity:.4;cursor:not-allowed"':''}>Weiter</button></div>
+      <div class="custom-row${modalData.presetId==='custom'?' selected':''}" onclick="selectPreset('custom')"><i class="ti ti-plus" style="font-size:18px"></i><span>${t('modal_custom_add')}</span></div>
+      <div class="modal-btns"><button class="btn-cancel" onclick="closeModal()">${t('btn_cancel')}</button><button class="btn-ok" onclick="goStep2()" ${!modalData.presetId?'disabled style="opacity:.4;cursor:not-allowed"':''}>${t('btn_next')}</button></div>
     </div></div>`;
   } else {
     const isC=modalData.presetId==='custom';const pre=PRESETS.find(p=>p.id===modalData.presetId);
@@ -1174,22 +1313,22 @@ function renderModal(){
     const co=COLORS.map(c=>`<div class="col-opt${cc===c?' sel':''}" style="background:${c}" data-c="${c}" onclick="pickColor('${c}')"></div>`).join('');
     mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
       <div class="step-dots"><div class="step-dot"></div><div class="step-dot on"></div></div>
-      <h3>${isC?'Custom Skill erstellen':'Skill anpassen'}</h3>
-      <div class="modal-row"><label>Name</label><input type="text" id="cname" value="${modalData.name||(pre?pre.name:'')}"></div>
-      <div class="modal-row"><label>Icon</label>
+      <h3>${isC?t('modal_create_custom'):t('modal_adjust')}</h3>
+      <div class="modal-row"><label>${t('field_name')}</label><input type="text" id="cname" value="${modalData.name||(pre?presetName(pre):'')}"></div>
+      <div class="modal-row"><label>${t('field_icon')}</label>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
           <div id="icon-preview" style="width:38px;height:38px;border-radius:10px;background:${cc}22;display:flex;align-items:center;justify-content:center;font-size:22px;border:0.5px solid var(--color-border-tertiary)">${ci}</div>
-          <span style="font-size:11px;color:var(--color-text-secondary)">Vorschau</span>
+          <span style="font-size:11px;color:var(--color-text-secondary)">${t('preview')}</span>
         </div>
         <div class="icon-picker">${ig}</div>
       </div>
-      <div class="modal-row"><label>Farbe</label><div class="color-opts">${co}</div></div>
-      <div class="modal-btns"><button class="btn-cancel" onclick="goBack()"><i class="ti ti-arrow-left" style="font-size:12px;vertical-align:-1px"></i> Zur\u00fcck</button><button class="btn-ok" onclick="confirmAddSkill()">Hinzuf\u00fcgen</button></div>
+      <div class="modal-row"><label>${t('field_color')}</label><div class="color-opts">${co}</div></div>
+      <div class="modal-btns"><button class="btn-cancel" onclick="goBack()"><i class="ti ti-arrow-left" style="font-size:12px;vertical-align:-1px"></i> ${t('btn_back')}</button><button class="btn-ok" onclick="confirmAddSkill()">${t('btn_add')}</button></div>
     </div></div>`;
     setTimeout(()=>{const i=document.getElementById('cname');if(i&&isC)i.focus();},50);
   }
 }
-function selectPreset(id){modalData.presetId=id;if(id!=='custom'){const p=PRESETS.find(x=>x.id===id);if(p){modalData.icon=p.icon;modalData.color=p.color;modalData.name=p.name;}}renderModal();}
+function selectPreset(id){modalData.presetId=id;if(id!=='custom'){const p=PRESETS.find(x=>x.id===id);if(p){modalData.icon=p.icon;modalData.color=p.color;modalData.name=presetName(p);}}renderModal();}
 function goStep2(){if(!modalData.presetId)return;modalStep=2;renderModal();}
 function goBack(){modalStep=1;renderModal();}
 function pickIcon(ic){modalData.icon=ic;document.querySelectorAll('.icon-opt').forEach(el=>el.classList.toggle('sel',el.textContent===ic));const p=document.getElementById('icon-preview');if(p)p.textContent=ic;}
@@ -1197,11 +1336,11 @@ function pickColor(c){modalData.color=c;document.querySelectorAll('.col-opt').fo
 function confirmAddSkill(){
   const name=(document.getElementById('cname').value||'').trim();if(!name)return;
   S.skills.push({id:Date.now().toString(),name,icon:modalData.icon||'\u{1F3AF}',color:modalData.color||'#7F77DD'});
-  save();closeModal();renderHome();toast(`${modalData.icon||'\u{1F3AF}'} ${name} hinzugef\u00fcgt!`);
+  save();closeModal();renderHome();toast(`${modalData.icon||'\u{1F3AF}'} ${name} ${LANG==='en'?'added!':'hinzugef\u00fcgt!'}`);
 }
 function deleteSkill(id){
   const sk=S.skills.find(s=>s.id===id);if(!sk)return;
-  document.getElementById('modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><h3>Skill l\u00f6schen?</h3><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px">"${sk.icon} ${sk.name}" und alle Eintr\u00e4ge werden gel\u00f6scht.</p><div class="modal-btns"><button class="btn-cancel" onclick="closeModal()">Abbrechen</button><button class="btn-ok" style="background:#E24B4A" onclick="confirmDel('${id}')">L\u00f6schen</button></div></div></div>`;
+  document.getElementById('modal-root').innerHTML=`<div class="modal-bg"><div class="modal"><h3>${t('modal_del')}</h3><p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px">${LANG==='en'?`"${sk.icon} ${sk.name}" and all its entries will be deleted.`:`"${sk.icon} ${sk.name}" und alle Eintr\u00e4ge werden gel\u00f6scht.`}</p><div class="modal-btns"><button class="btn-cancel" onclick="closeModal()">${t('btn_cancel')}</button><button class="btn-ok" style="background:#E24B4A" onclick="confirmDel('${id}')">${t('btn_delete')}</button></div></div></div>`;
 }
 function confirmDel(id){S.skills=S.skills.filter(s=>s.id!==id);S.logs=S.logs.filter(l=>l.skillId!==id);save();closeModal();renderHome();}
 function closeModal(){document.getElementById('modal-root').innerHTML='';}
@@ -1225,20 +1364,20 @@ function initUpdateListener(){
     const barFill=document.getElementById('update-bar-fill');
     const barLabel=document.getElementById('update-bar-label');
     if(data.type==='available'){
-      showUpdateBanner(`\u2B07\uFE0F Update v${data.version} wird heruntergeladen...`,'info');
-      if(barLabel)barLabel.textContent=`v${data.version} wird heruntergeladen...`;
+      showUpdateBanner(`\u2B07\uFE0F ${LANG==='en'?'Downloading update v'+data.version+'...':'Update v'+data.version+' wird heruntergeladen...'}`,'info');
+      if(barLabel)barLabel.textContent=`v${data.version} ${LANG==='en'?'downloading...':'wird heruntergeladen...'}`;
       if(bar)bar.style.display='block';
     } else if(data.type==='progress'){
       if(barFill)barFill.style.width=data.percent+'%';
-      if(barLabel)barLabel.textContent=`Wird heruntergeladen... ${data.percent}%`;
+      if(barLabel)barLabel.textContent=`${t('update_downloading')} ${data.percent}%`;
     } else if(data.type==='ready'){
       updateReady=true;
       if(bar)bar.style.display='none';
-      if(btn){btn.innerHTML='<i class="ti ti-refresh"></i> Jetzt neu starten';btn.onclick=()=>window.electronAPI.installUpdate();}
-      showUpdateBanner(`\u2705 Update v${data.version} bereit \u2014 <span style="text-decoration:underline;cursor:pointer" onclick="window.electronAPI.installUpdate()">Jetzt neu starten</span>`,'ready');
+      if(btn){btn.innerHTML='<i class="ti ti-refresh"></i> '+t('upd_restart');btn.onclick=()=>window.electronAPI.installUpdate();}
+      showUpdateBanner(`\u2705 ${LANG==='en'?'Update v'+data.version+' ready':'Update v'+data.version+' bereit'} \u2014 <span style="text-decoration:underline;cursor:pointer" onclick="window.electronAPI.installUpdate()">${t('upd_restart')}</span>`,'ready');
     } else if(data.type==='none'){
-      if(btn)btn.innerHTML='<i class="ti ti-circle-check"></i> Aktuell';
-      setTimeout(()=>{if(btn)btn.innerHTML='<i class="ti ti-refresh"></i> Auf Updates pr\u00fcfen';},3000);
+      if(btn)btn.innerHTML='<i class="ti ti-circle-check"></i> '+t('upd_current');
+      setTimeout(()=>{if(btn)btn.innerHTML='<i class="ti ti-refresh"></i> '+t('set_check_updates');},3000);
     }
   });
 }
@@ -1251,9 +1390,9 @@ function showUpdateBanner(html,type){
 function manualCheckUpdate(){
   const btn=document.getElementById('update-btn');
   if(updateReady){window.electronAPI.installUpdate();return;}
-  if(btn)btn.innerHTML='<i class="ti ti-loader"></i> Suche...';
+  if(btn)btn.innerHTML='<i class="ti ti-loader"></i> '+t('upd_searching');
   window.electronAPI.checkUpdate();
-  setTimeout(()=>{if(btn&&!updateReady)btn.innerHTML='<i class="ti ti-refresh"></i> Auf Updates pr\u00fcfen';},5000);
+  setTimeout(()=>{if(btn&&!updateReady)btn.innerHTML='<i class="ti ti-refresh"></i> '+t('set_check_updates');},5000);
 }
 
 (function init(){
@@ -1261,6 +1400,8 @@ function manualCheckUpdate(){
   try{savedTheme=localStorage.getItem(THEME_KEY);}catch(e){}
   if(!savedTheme||!THEMES[savedTheme]){savedTheme=matchMedia('(prefers-color-scheme: dark)').matches?'dunkel':'hell';}
   applyTheme(savedTheme);
+  try{const sl=localStorage.getItem(LANG_KEY);if(sl==='de'||sl==='en')LANG=sl;}catch(e){}
+  applyStaticLang();
   load();
   renderHome();
   initUpdateListener();
