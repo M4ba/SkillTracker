@@ -133,6 +133,11 @@ select:focus,input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var
 .step-dot{width:6px;height:6px;border-radius:50%;background:var(--color-background-secondary)}
 .step-dot.on{background:var(--accent)}
 .xtoast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--accent-strong);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:300;transition:opacity .3s;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+@keyframes confettiFall{to{top:105%;transform:translateX(var(--drift)) rotate(720deg);opacity:.9}}
+.quote-card{display:flex;align-items:flex-start;gap:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 14px;margin-bottom:1.25rem;border-left:3px solid var(--accent)}
+.quote-icon{font-size:18px;flex-shrink:0;line-height:1.3}
+.quote-text{font-size:13px;font-style:italic;color:var(--color-text-primary);line-height:1.45}
+.quote-author{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
 .theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.25rem}
 .theme-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer;transition:all .15s;background:var(--color-background-primary)}
 .theme-opt:hover{border-color:var(--color-border-secondary)}
@@ -271,6 +276,7 @@ function load(){
   try{const v=localStorage.getItem(STORAGE_KEY);if(v)S=JSON.parse(v);}catch(e){}
   if(!S.skills)S.skills=[];if(!S.logs)S.logs=[];
   S.skills.forEach((sk,i)=>{if(!sk.icon)sk.icon='\u{1F3AF}';if(!sk.color)sk.color=COLORS[i%COLORS.length];});
+  if(!S.seenLevels)S.seenLevels=computeSkillLevels();
 }
 function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));}catch(e){alert('Speichern fehlgeschlagen \u2014 evtl. ist der Browser-Speicher voll.');}}
 
@@ -350,8 +356,46 @@ function checkNewAchievements(){
   const fresh=now.filter(id=>!S.seenAch.includes(id));
   if(fresh.length){
     S.seenAch=now;save();
-    fresh.forEach((id,i)=>{const a=ACHIEVEMENTS.find(x=>x.id===id);setTimeout(()=>toast(`\u{1F3C6} Achievement: ${a.icon} ${a.name}`),600+i*1600);});
+    fresh.forEach((id,i)=>{const a=ACHIEVEMENTS.find(x=>x.id===id);setTimeout(()=>{toast(`\u{1F3C6} Achievement: ${a.icon} ${a.name}`);fireConfetti();},600+i*1600);});
   } else {S.seenAch=now;save();}
+  checkLevelUps();
+}
+
+// ===== Level-Up-Erkennung =====
+function computeSkillLevels(){const m={};S.skills.forEach(sk=>{m[sk.id]=getLvl(S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0)).lvl;});return m;}
+function checkLevelUps(){
+  const cur=computeSkillLevels();
+  if(!S.seenLevels){S.seenLevels=cur;save();return;}
+  let up=null;
+  Object.keys(cur).forEach(id=>{const prev=S.seenLevels[id]||1;if(cur[id]>prev){const sk=S.skills.find(s=>s.id===id);if(sk)up={sk,lvl:cur[id]};}});
+  S.seenLevels=cur;save();
+  if(up){
+    const name=LEVELS[up.lvl-1]?LEVELS[up.lvl-1].name:'';
+    setTimeout(()=>{toast(`\u2B50 Level Up! ${up.sk.icon} ${up.sk.name} \u2192 Lvl ${up.lvl} ${name}`);fireConfetti(true);},400);
+  }
+}
+
+// ===== Konfetti-Animation =====
+function fireConfetti(big){
+  const colors=['#7F77DD','#1D9E75','#D85A30','#378ADD','#D4537E','#BA7517','#E24B4A','#5FC089'];
+  const count=big?120:60;
+  const container=document.createElement('div');
+  container.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden';
+  document.body.appendChild(container);
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div');
+    const size=6+Math.random()*7;
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    const left=Math.random()*100;
+    const delay=Math.random()*0.3;
+    const dur=2+Math.random()*1.5;
+    const rot=Math.random()*360;
+    const drift=(Math.random()-0.5)*200;
+    const round=Math.random()>0.5?'50%':'2px';
+    p.style.cssText=`position:absolute;top:-20px;left:${left}%;width:${size}px;height:${size}px;background:${color};border-radius:${round};opacity:1;transform:rotate(${rot}deg);animation:confettiFall ${dur}s ${delay}s cubic-bezier(.3,.6,.5,1) forwards;--drift:${drift}px`;
+    container.appendChild(p);
+  }
+  setTimeout(()=>container.remove(),4200);
 }
 
 // ===== Daily Challenge =====
@@ -435,6 +479,32 @@ function forecastForSkill(sk){
   return{xp,lv,need,weeks};
 }
 
+// ===== Tages-Motivationsspruch =====
+const QUOTES=[
+  {t:'Der beste Zeitpunkt anzufangen war gestern. Der zweitbeste ist jetzt.',a:'Sprichwort'},
+  {t:'Kleine Fortschritte sind immer noch Fortschritte.',a:''},
+  {t:'Du musst nicht gro\u00dfartig sein um anzufangen, aber du musst anfangen um gro\u00dfartig zu werden.',a:'Zig Ziglar'},
+  {t:'Erfolg ist die Summe kleiner Anstrengungen, Tag f\u00fcr Tag wiederholt.',a:'Robert Collier'},
+  {t:'Ein Profi ist ein Amateur, der nie aufgegeben hat.',a:''},
+  {t:'Disziplin ist die Br\u00fccke zwischen Zielen und Erfolg.',a:'Jim Rohn'},
+  {t:'Es ist nicht wichtig wie langsam du gehst, solange du nicht stehen bleibst.',a:'Konfuzius'},
+  {t:'Die Meisterschaft entsteht nicht an einem Tag, sondern an jedem Tag.',a:''},
+  {t:'Wer aufh\u00f6rt besser zu werden, hat aufgeh\u00f6rt gut zu sein.',a:'Philip Rosenthal'},
+  {t:'Motivation bringt dich in Gang, Gewohnheit h\u00e4lt dich am Laufen.',a:'Jim Ryun'},
+  {t:'\u00dcbung macht nicht perfekt. Perfekte \u00dcbung macht perfekt.',a:'Vince Lombardi'},
+  {t:'Jeder Experte war einmal ein Anf\u00e4nger.',a:''},
+  {t:'Heute ist eine gute Gelegenheit, dein zuk\u00fcnftiges Ich stolz zu machen.',a:''},
+  {t:'Konstanz schl\u00e4gt Intensit\u00e4t \u2014 jeden Tag ein bisschen.',a:''},
+  {t:'Was du heute \u00fcbst, ist das was du morgen kannst.',a:''},
+];
+function quoteCardHTML(){
+  const q=QUOTES[seededInt('q'+today(),QUOTES.length)];
+  return `<div class="quote-card">
+    <span class="quote-icon">\u{1F4AD}</span>
+    <div><div class="quote-text">\u201E${q.t}\u201C</div>${q.a?`<div class="quote-author">\u2014 ${q.a}</div>`:''}</div>
+  </div>`;
+}
+
 function renderHome(){
   const el=document.getElementById('tab-home');
   const totalXP=S.logs.reduce((s,l)=>s+l.xp,0);
@@ -469,6 +539,7 @@ function renderHome(){
   skHtml+=`<div class="skill-card add-card" onclick="showAddSkill()"><i class="ti ti-plus" style="font-size:18px"></i> Skill hinzuf\u00fcgen</div>`;
 
   el.innerHTML=`
+  ${quoteCardHTML()}
   ${we?`<div style="margin-bottom:10px"><span class="bonus-badge"><i class="ti ti-bolt" style="font-size:11px"></i> x2 XP Wochenende!</span></div>`:''}
   ${S.skills.length?challengeCardHTML():''}
   <div class="stat-grid">
