@@ -1,6 +1,20 @@
+# Abhängigkeiten (werden per npm install neu erzeugt)
 node_modules/
+
+# Build-Ausgabe (wird per npm run build/publish neu erzeugt)
 dist/
+
+# Logs
 *.log
-.env
+npm-debug.log*
+
+# Betriebssystem-Kram
 .DS_Store
 Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Umgebungsvariablen (Token NICHT committen!)
+.env

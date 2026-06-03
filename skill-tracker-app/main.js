@@ -9,7 +9,6 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'development') {
     autoUpdater = require('electron-updater').autoUpdater;
     autoUpdater.autoDownload = true;        // sofort im Hintergrund laden
     autoUpdater.autoInstallOnAppQuit = true; // beim Beenden installieren
-    autoUpdater.logger = null;               // kein Log-Spam
   } catch(e) { /* electron-updater nicht verfügbar im Dev-Modus */ }
 }
 
@@ -77,7 +76,9 @@ function startUpdateCheck() {
 
 // ─── IPC: Update installieren ────────────────────────────────────────────────
 ipcMain.handle('install-update', () => {
-  autoUpdater?.quitAndInstall(false, true);
+  // isSilent=true  -> kein sichtbares Setup-Fenster
+  // isForceRunAfter=true -> App startet nach dem Update automatisch neu
+  autoUpdater?.quitAndInstall(true, true);
 });
 
 ipcMain.handle('check-update', () => {
