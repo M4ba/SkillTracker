@@ -51,20 +51,6 @@ Achievements und Abzeichen frei.
 - **2 Sprachen** – Deutsch & Englisch, jederzeit umschaltbar
 - **Backup** – Export/Import als JSON-Datei
 - **Auto-Updates** über GitHub Releases (wie bei Discord)
-
----
-
-## 📸 Screenshots
-
-> _Hier kannst du Screenshots einfügen. Lege sie z.B. in einen Ordner `docs/`
-> und binde sie so ein:_
-
-```markdown
-![Home](docs/home.png)
-![Statistik](docs/stats.png)
-![Profil](docs/profile.png)
-```
-
 ---
 
 ## 🚀 Installation
