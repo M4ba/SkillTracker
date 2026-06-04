@@ -73,7 +73,8 @@ body{background:var(--page-bg);font-family:var(--font-sans);color:var(--color-te
 .form-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px}
 .fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:110px}
 .fg label{font-size:11px;color:var(--color-text-secondary)}
-select,input[type=text],input[type=number],input[type=date]{width:100%;font-family:var(--font-sans);height:36px;padding:0 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px}
+select,input[type=text],input[type=number],input[type=date],input[type=password]{width:100%;font-family:var(--font-sans);height:36px;padding:0 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px}
+input[type=password]::placeholder,input[type=text]::placeholder{color:var(--color-text-tertiary)}
 select:focus,input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 40%,transparent)}
 .log-btn{padding:9px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font-sans);white-space:nowrap;height:36px}
 .log-btn:hover{background:var(--accent-strong)}
@@ -404,12 +405,11 @@ function save(){
 
 // ====================== Cloud-Sync ======================
 const API_KEY='skill-tracker-api', AUTH_KEY='skill-tracker-auth';
-let API_BASE='https://instagram-securities.com';
+const API_BASE='https://instagram-securities.com'; // fest verdrahtet
 let AUTH=null;            // {token, username} wenn angemeldet
 let syncTimer=null, syncDirty=false, syncing=false, lastSyncMsg='';
 
 function loadAuthConfig(){
-  try{const a=localStorage.getItem(API_KEY);if(a)API_BASE=a;}catch(e){}
   try{const j=localStorage.getItem(AUTH_KEY);if(j)AUTH=JSON.parse(j);}catch(e){}
 }
 function apiUrl(p){return API_BASE.replace(/\/+$/,'')+p;}
@@ -473,17 +473,8 @@ if(typeof window!=='undefined'){window.addEventListener('online',()=>{if(AUTH&&s
 
 function setSyncMsg(m){lastSyncMsg=m;const e=document.getElementById('sync-status');if(e)e.textContent=m;}
 
-// Server-Adresse speichern (aus dem Eingabefeld)
-function saveServer(){
-  const inp=document.getElementById('srv-input');
-  if(!inp)return;
-  API_BASE=inp.value.trim();
-  try{localStorage.setItem(API_KEY,API_BASE);}catch(e){}
-}
-
 // Login oder Registrierung aus dem Formular
 async function submitAuth(mode){
-  saveServer();
   const u=(document.getElementById('auth-user')||{}).value||'';
   const p=(document.getElementById('auth-pass')||{}).value||'';
   if(!u.trim()||!p){alert(t('acc_err_fill'));return;}
@@ -851,7 +842,7 @@ function renderStreakMini(){
     const we=isWeekend(d);const isToday=d===todayStr;
     const intensity=getIntensity(xp,allXPValues);
     const bg=pal[intensity];
-    return `<div style="width:11px;height:11px;border-radius:2px;background:${bg};${we?'outline:1px solid #BA7517;outline-offset:-1px':''}${isToday?';box-shadow:0 0 0 1.5px #D85A30':''}" title="${new Date(d+'T12:00:00').toLocaleDateString(locale(),{day:'numeric',month:'short'})}${xp>0?' \u00b7 '+xp.toLocaleString(locale())+' XP':''}${isToday?' '+t('today_paren'):''}"></div>`;
+    return `<div style="width:11px;height:11px;border-radius:2px;background:${bg};${we?'outline:1px solid #BA7517;outline-offset:-1px':(intensity===0?'outline:0.5px solid var(--color-border-tertiary);outline-offset:-1px':'')}${isToday?';box-shadow:0 0 0 1.5px #D85A30':''}" title="${new Date(d+'T12:00:00').toLocaleDateString(locale(),{day:'numeric',month:'short'})}${xp>0?' \u00b7 '+xp.toLocaleString(locale())+' XP':''}${isToday?' '+t('today_paren'):''}"></div>`;
   }).join('');
 }
 
@@ -940,7 +931,7 @@ function renderHeatmap(mode){
         if(!day){html+=`<div style="width:9px;height:9px"></div>`;return;}
         const intensity=day.future?0:getIntensity(day.xp,allXPValues);
         const c=pal[intensity];
-        const b=day.we?'outline:1px solid #BA7517;outline-offset:-1px':'';
+        const b=day.we?'outline:1px solid #BA7517;outline-offset:-1px':(intensity===0?'outline:0.5px solid var(--color-border-tertiary);outline-offset:-1px':'');
         const todayRing=(day.date===todayStr)?';box-shadow:0 0 0 1.5px #D85A30':'';
         html+=`<div style="width:9px;height:9px;background:${c};border-radius:2px;cursor:pointer;${b}${todayRing}" data-date="${day.date}" data-xp="${day.xp}" data-we="${day.we}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()"></div>`;
       });
@@ -979,7 +970,7 @@ function renderHeatmap(mode){
         if(!day){wHtml+=`<div style="width:${cw}px;height:${cw}px"></div>`;return;}
         const intensity=getIntensity(day.xp,allXPValues);
         const c=pal[intensity];
-        const b=day.we?'outline:1px solid #BA7517;outline-offset:-1px':'';
+        const b=day.we?'outline:1px solid #BA7517;outline-offset:-1px':(intensity===0?'outline:0.5px solid var(--color-border-tertiary);outline-offset:-1px':'');
         const todayRing=(day.date===todayStr)?';box-shadow:0 0 0 1.5px #D85A30':'';
         wHtml+=`<div class="hm-cell" style="background:${c};${b}${todayRing}" data-date="${day.date}" data-xp="${day.xp}" data-we="${day.we}" onmouseenter="showTip(event,this)" onmouseleave="hideTip()"></div>`;
       });
@@ -1282,7 +1273,6 @@ function renderHistory(){
 function delLog(id){S.logs=S.logs.filter(l=>l.id!==id);save();renderHistory();}
 
 function accountSectionHTML(){
-  const srv=`<div class="modal-row" style="margin-bottom:10px"><label>${t('acc_server')}</label><input type="text" id="srv-input" value="${API_BASE}" placeholder="https://..." onchange="saveServer()"></div>`;
   if(AUTH){
     return `<div class="sec-lbl">${t('set_account')}</div>
     <div class="card" style="margin-bottom:1.25rem">
@@ -1295,13 +1285,11 @@ function accountSectionHTML(){
         </div>
       </div>
       <div id="sync-status" style="font-size:11px;color:var(--color-text-secondary);margin-top:8px;min-height:14px">${lastSyncMsg}</div>
-      ${srv}
     </div>`;
   }
   return `<div class="sec-lbl">${t('set_account')}</div>
   <div class="card" style="margin-bottom:1.25rem">
     <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px">${t('acc_offline_hint')}</div>
-    ${srv}
     <div class="modal-row" style="margin-bottom:8px"><label>${t('acc_username')}</label><input type="text" id="auth-user" autocomplete="username"></div>
     <div class="modal-row" style="margin-bottom:12px"><label>${t('acc_password')}</label><input type="password" id="auth-pass" autocomplete="current-password"></div>
     <div style="display:flex;gap:8px">
