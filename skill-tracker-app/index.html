@@ -135,6 +135,10 @@ select:focus,input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var
 .step-dot.on{background:var(--accent)}
 .xtoast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--accent-strong);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;z-index:300;transition:opacity .3s;box-shadow:0 4px 12px rgba(0,0,0,.2)}
 @keyframes confettiFall{to{top:105%;transform:translateX(var(--drift)) rotate(720deg);opacity:.9}}
+@keyframes lvlUpIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}12%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}22%{transform:translate(-50%,-50%) scale(1)}82%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.95)}}
+.lvlup-card{position:fixed;top:42%;left:50%;transform:translate(-50%,-50%);z-index:9998;background:var(--color-background-primary);border:1px solid var(--accent);border-radius:16px;padding:22px 30px;text-align:center;box-shadow:0 14px 44px rgba(0,0,0,.4);animation:lvlUpIn 2.9s ease forwards;pointer-events:none}
+@keyframes xpFloat{0%{opacity:0;transform:translate(-50%,0) scale(.8)}20%{opacity:1;transform:translate(-50%,-12px) scale(1)}100%{opacity:0;transform:translate(-50%,-72px) scale(1)}}
+.xp-float{position:fixed;bottom:92px;left:50%;transform:translate(-50%,0);z-index:9997;background:var(--accent);color:#fff;font-weight:600;font-size:15px;padding:8px 16px;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,.28);animation:xpFloat 1.8s ease forwards;pointer-events:none}
 .quote-card{display:flex;align-items:flex-start;gap:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 14px;margin-bottom:1.25rem;border-left:3px solid var(--accent)}
 .quote-icon{font-size:18px;flex-shrink:0;line-height:1.3}
 .quote-text{font-size:13px;font-style:italic;color:var(--color-text-primary);line-height:1.45}
@@ -158,7 +162,28 @@ select:focus,input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var
 .challenge-status{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .challenge-claim{padding:6px 14px;background:#fff;color:var(--accent-strong);border:none;border-radius:var(--border-radius-md);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-sans)}
 .challenge-done{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
-.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:1.25rem}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:8px}
+.ach-more{display:block;width:100%;margin-bottom:1.25rem;padding:8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:12px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);font-family:var(--font-sans);transition:background .15s}
+.ach-more:hover{background:var(--color-background-tertiary)}
+.quest-sub{font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+.quest-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.quest-ic{font-size:18px;width:24px;text-align:center;flex-shrink:0}
+.quest-body{flex:1;min-width:0}
+.quest-name{font-size:12.5px;color:var(--color-text-primary);margin-bottom:4px}
+.quest-bar{height:5px;background:var(--color-background-tertiary);border-radius:3px;overflow:hidden}
+.quest-bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s}
+.quest-prog{font-size:11px;color:var(--color-text-secondary);flex-shrink:0;min-width:60px;text-align:right}
+.badge-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.badge-chip{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--color-background-tertiary);border-radius:8px;border:0.5px solid var(--color-border-tertiary)}
+.prof-header{display:flex;align-items:center;gap:14px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:16px;margin-bottom:1.25rem}
+.prof-avatar{width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:600;flex-shrink:0}
+.prof-name{font-size:18px;font-weight:600;color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prof-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.prof-skill{display:flex;align-items:center;gap:11px;margin-bottom:13px}
+.prof-skill:last-child{margin-bottom:0}
+.prof-stat-line{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.prof-stat-line:last-child{border-bottom:none}
+.prof-stat-line span:last-child{color:var(--color-text-primary);font-weight:500}
 .ach-item{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 12px;display:flex;align-items:center;gap:10px;transition:all .15s}
 .ach-item.locked{opacity:.42}
 .ach-item.unlocked{border-color:var(--accent)}
@@ -181,12 +206,14 @@ select:focus,input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var
   <button class="nav-btn" onclick="setTab('log')" id="nb-log"><i class="ti ti-plus"></i><span id="nl-log">Erfassen</span></button>
   <button class="nav-btn" onclick="setTab('stats')" id="nb-stats"><i class="ti ti-chart-bar"></i><span id="nl-stats">Statistik</span></button>
   <button class="nav-btn" onclick="setTab('history')" id="nb-history"><i class="ti ti-list"></i><span id="nl-history">Verlauf</span></button>
+  <button class="nav-btn" onclick="setTab('profile')" id="nb-profile"><i class="ti ti-user"></i><span id="nl-profile">Profil</span></button>
   <button class="nav-btn" onclick="setTab('settings')" id="nb-settings" aria-label="Einstellungen"><i class="ti ti-settings"></i></button>
 </nav>
 <div id="tab-home" class="tab-content active"></div>
 <div id="tab-log" class="tab-content"></div>
 <div id="tab-stats" class="tab-content"></div>
 <div id="tab-history" class="tab-content"></div>
+<div id="tab-profile" class="tab-content"></div>
 <div id="tab-settings" class="tab-content"></div>
 <div id="modal-root"></div>
 <div id="tip" class="tip" style="display:none"></div>
@@ -273,9 +300,9 @@ let LANG='de';
 
 const I18N={
 de:{
- nav_home:'Home',nav_log:'Erfassen',nav_stats:'Statistik',nav_history:'Verlauf',nav_settings:'Einstellungen',
+ nav_home:'Home',nav_log:'Erfassen',nav_stats:'Statistik',nav_history:'Verlauf',nav_profile:'Profil',nav_settings:'Einstellungen',profile_local:'Lokales Profil',prof_top_level:'H\u00f6chstes Level',prof_best_skills:'Beste Skills',prof_active_days:'Aktive Tage',prof_summary:'Statistik',prof_best_day:'Bester Tag',prof_entries:'Eintr\u00e4ge',prof_no_skills:'Noch keine Skills',
  home_total_xp:'Gesamt XP',home_hours:'Stunden',home_today_xp:'Heute XP',home_skills:'Skills',
- streak_days:'Tage Streak',streak_longest:'L\u00e4ngster Streak',last30:'Letzte 30 Tage',older_today:'\u00e4lter \u2192 heute',
+ streak_days:'Tage Streak',streak_longest:'L\u00e4ngster Streak',streak_atrisk:'Streak in Gefahr \u2014 heute weitermachen damit sie nicht endet!',streak_today:'Heute noch offen',last30:'Letzte 30 Tage',older_today:'\u00e4lter \u2192 heute',
  sec_skills:'Skills',add_skill:'Skill hinzuf\u00fcgen',weekend_bonus:'x2 XP Wochenende!',sec_achievements:'Achievements',
  max:'MAX',
  hm_activity:'Aktivit\u00e4t',hm_lastyear:'Letztes Jahr',hm_calyear:'Kalenderjahr',hm_less:'weniger',hm_more:'mehr',
@@ -315,16 +342,16 @@ de:{
  ach_versatile_n:'Vielseitig',ach_versatile_d:'5 Skills erstellt',ach_xp1k_n:'Tausendsassa',ach_xp1k_d:'1.000 XP gesamt',
  ach_xp10k_n:'Zehntausender',ach_xp10k_d:'10.000 XP gesamt',ach_lvl5_n:'Aufsteiger',ach_lvl5_d:'Ein Skill auf Lvl 5',
  ach_lvl9_n:'Meisterhaft',ach_lvl9_d:'Ein Skill auf Lvl 9',ach_marathon_n:'Marathon',ach_marathon_d:'8h+ an einem Tag',
- ach_days50_n:'Best\u00e4ndig',ach_days50_d:'50 aktive Tage',ach_logs100_n:'Sammler',ach_logs100_d:'100 Eintr\u00e4ge',
+ ach_days50_n:'Best\u00e4ndig',ach_days50_d:'50 aktive Tage',ach_logs100_n:'Sammler',ach_logs100_d:'100 Eintr\u00e4ge',ach_consistent14_n:'Dranbleiber',ach_consistent14_d:'14-Tage-Streak',ach_streak100_n:'Unaufhaltsam',ach_streak100_d:'100-Tage-Streak',ach_xp50k_n:'F\u00fcnfzigtausender',ach_xp50k_d:'50.000 XP gesamt',ach_xp100k_n:'Legende',ach_xp100k_d:'100.000 XP gesamt',ach_hours100_n:'Hundert Stunden',ach_hours100_d:'100 Stunden ge\u00fcbt',ach_hours500_n:'F\u00fcnfhundert Stunden',ach_hours500_d:'500 Stunden ge\u00fcbt',ach_maxlevel_n:'Maximum',ach_maxlevel_d:'Ein Skill auf Lvl 10',ach_challenger_n:'Herausforderer',ach_challenger_d:'Erstes Tagesziel eingel\u00f6st',ach_challenger10_n:'Zielstrebig',ach_challenger10_d:'10 Tagesziele eingel\u00f6st',ach_weekendpro_n:'Wochenend-Profi',ach_weekendpro_d:'15 Wochenend-Sessions',ach_more_n:'Mehr anzeigen ({n})',ach_less:'Weniger anzeigen',quests_title:'Quests',quests_weekly:'Wochen-Quests',quests_seasonal:'Saison-Quests',quest_done:'Quest geschafft',badges_label:'Abzeichen',season_spring:'Fr\u00fchling',season_summer:'Sommer',season_autumn:'Herbst',season_winter:'Winter',q_w_xp1500:'1.500 XP diese Woche',q_w_xp3000:'3.000 XP diese Woche',q_w_hours5:'5 Stunden diese Woche',q_w_hours10:'10 Stunden diese Woche',q_w_days4:'An 4 Tagen aktiv',q_w_days6:'An 6 Tagen aktiv',q_w_skills3:'3 Skills diese Woche',q_s_xp20k:'20.000 XP diese Saison',q_s_xp40k:'40.000 XP diese Saison',q_s_hours50:'50 Stunden diese Saison',q_s_days40:'40 aktive Tage',q_s_skills5:'5 Skills diese Saison',q_s_logs60:'60 Eintr\u00e4ge diese Saison',
  chal_dur45:'Bleib dran: heute mind. 45 Minuten',chal_dur60:'\u00dcbe heute mindestens 1 Stunde',chal_dur120:'Sammle heute 2 Stunden Lernzeit',
  chal_dur180:'Gro\u00dfer Tag: 3 Stunden heute',chal_focus90:'Fokus-Session: 90 Min am selben Skill',chal_focus120:'Tiefer Fokus: 2h an einem einzigen Skill',
  chal_two30:'2 Skills f\u00fcr je mind. 30 Minuten',chal_three20:'3 Skills f\u00fcr je mind. 20 Minuten',chal_xp300:'Erreiche heute 300 XP',chal_xp500:'Erreiche heute 500 XP',
 set_account:'Account',acc_logged_in_as:'Angemeldet als',acc_server:'Server-Adresse',acc_username:'Benutzername',acc_password:'Passwort',acc_login:'Anmelden',acc_register:'Registrieren',acc_logout:'Abmelden',acc_sync_now:'Jetzt synchronisieren',acc_offline_hint:'Ohne Account werden deine Daten nur lokal gespeichert. Mit Account kannst du sie ger\u00e4te\u00fcbergreifend synchronisieren.',sync_saved:'\u2713 Synchronisiert',sync_offline:'\u26A0 Offline \u2014 wird sp\u00e4ter synchronisiert',sync_session_expired:'\u26A0 Sitzung abgelaufen \u2014 bitte neu anmelden',sync_pulling:'Lade Daten...',acc_err_fill:'Bitte Benutzername und Passwort eingeben',acc_welcome:'Willkommen',acc_login_failed:'Anmeldung fehlgeschlagen: ',
 },
 en:{
- nav_home:'Home',nav_log:'Log',nav_stats:'Stats',nav_history:'History',nav_settings:'Settings',
+ nav_home:'Home',nav_log:'Log',nav_stats:'Stats',nav_history:'History',nav_profile:'Profile',nav_settings:'Settings',profile_local:'Local profile',prof_top_level:'Top level',prof_best_skills:'Top Skills',prof_active_days:'Active days',prof_summary:'Statistics',prof_best_day:'Best day',prof_entries:'Entries',prof_no_skills:'No skills yet',
  home_total_xp:'Total XP',home_hours:'Hours',home_today_xp:'XP Today',home_skills:'Skills',
- streak_days:'Day Streak',streak_longest:'Longest Streak',last30:'Last 30 Days',older_today:'older \u2192 today',
+ streak_days:'Day Streak',streak_longest:'Longest Streak',streak_atrisk:'Streak at risk \u2014 keep going today so it doesn\u2019t end!',streak_today:'Not done today',last30:'Last 30 Days',older_today:'older \u2192 today',
  sec_skills:'Skills',add_skill:'Add Skill',weekend_bonus:'x2 XP Weekend!',sec_achievements:'Achievements',
  max:'MAX',
  hm_activity:'Activity',hm_lastyear:'Last Year',hm_calyear:'Calendar Year',hm_less:'less',hm_more:'more',
@@ -364,7 +391,7 @@ en:{
  ach_versatile_n:'Versatile',ach_versatile_d:'Created 5 skills',ach_xp1k_n:'Millennial',ach_xp1k_d:'1,000 XP total',
  ach_xp10k_n:'Ten-Thousander',ach_xp10k_d:'10,000 XP total',ach_lvl5_n:'Riser',ach_lvl5_d:'A skill at Lvl 5',
  ach_lvl9_n:'Masterful',ach_lvl9_d:'A skill at Lvl 9',ach_marathon_n:'Marathon',ach_marathon_d:'8h+ in one day',
- ach_days50_n:'Consistent',ach_days50_d:'50 active days',ach_logs100_n:'Collector',ach_logs100_d:'100 entries',
+ ach_days50_n:'Consistent',ach_days50_d:'50 active days',ach_logs100_n:'Collector',ach_logs100_d:'100 entries',ach_consistent14_n:'Sticker',ach_consistent14_d:'14-day streak',ach_streak100_n:'Unstoppable',ach_streak100_d:'100-day streak',ach_xp50k_n:'Fifty-Thousander',ach_xp50k_d:'50,000 XP total',ach_xp100k_n:'Legend',ach_xp100k_d:'100,000 XP total',ach_hours100_n:'Hundred Hours',ach_hours100_d:'Practiced 100 hours',ach_hours500_n:'Five Hundred Hours',ach_hours500_d:'Practiced 500 hours',ach_maxlevel_n:'Maxed Out',ach_maxlevel_d:'A skill at Lvl 10',ach_challenger_n:'Challenger',ach_challenger_d:'Redeemed first daily goal',ach_challenger10_n:'Goal-Getter',ach_challenger10_d:'Redeemed 10 daily goals',ach_weekendpro_n:'Weekend Pro',ach_weekendpro_d:'15 weekend sessions',ach_more_n:'Show more ({n})',ach_less:'Show less',quests_title:'Quests',quests_weekly:'Weekly Quests',quests_seasonal:'Seasonal Quests',quest_done:'Quest complete',badges_label:'Badges',season_spring:'Spring',season_summer:'Summer',season_autumn:'Autumn',season_winter:'Winter',q_w_xp1500:'1,500 XP this week',q_w_xp3000:'3,000 XP this week',q_w_hours5:'5 hours this week',q_w_hours10:'10 hours this week',q_w_days4:'Active on 4 days',q_w_days6:'Active on 6 days',q_w_skills3:'3 skills this week',q_s_xp20k:'20,000 XP this season',q_s_xp40k:'40,000 XP this season',q_s_hours50:'50 hours this season',q_s_days40:'40 active days',q_s_skills5:'5 skills this season',q_s_logs60:'60 entries this season',
  chal_dur45:'Keep it up: at least 45 minutes today',chal_dur60:'Practice at least 1 hour today',chal_dur120:'Collect 2 hours of practice today',
  chal_dur180:'Big day: 3 hours today',chal_focus90:'Focus session: 90 min on the same skill',chal_focus120:'Deep focus: 2h on a single skill',
  chal_two30:'2 skills for at least 30 minutes each',chal_three20:'3 skills for at least 20 minutes each',chal_xp300:'Reach 300 XP today',chal_xp500:'Reach 500 XP today',
@@ -379,7 +406,7 @@ function needText(need,name){return LANG==='en'?`${need} XP to ${name}`:`${need}
 function xpForToast(xp,label){return LANG==='en'?`+${xp} XP for ${label}`:`+${xp} XP f\u00fcr ${label}`;}
 function setLang(l){LANG=l;try{localStorage.setItem(LANG_KEY,l);}catch(e){}applyStaticLang();setTab(curTab);}
 function applyStaticLang(){
-  const m={'nl-home':'nav_home','nl-log':'nav_log','nl-stats':'nav_stats','nl-history':'nav_history'};
+  const m={'nl-home':'nav_home','nl-log':'nav_log','nl-stats':'nav_stats','nl-history':'nav_history','nl-profile':'nav_profile'};
   Object.entries(m).forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.textContent=t(k);});
   const s=document.getElementById('nb-settings');if(s)s.setAttribute('aria-label',t('nav_settings'));
   document.documentElement.lang=LANG;
@@ -397,6 +424,7 @@ function load(){
   if(!S.skills)S.skills=[];if(!S.logs)S.logs=[];
   S.skills.forEach((sk,i)=>{if(!sk.icon)sk.icon='\u{1F3AF}';if(!sk.color)sk.color=COLORS[i%COLORS.length];});
   if(!S.seenLevels)S.seenLevels=computeSkillLevels();
+  if(!S.badges){S.badges=[];checkQuests(true);}
 }
 function save(){
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));}catch(e){alert(t('save_failed'));}
@@ -405,7 +433,7 @@ function save(){
 
 // ====================== Cloud-Sync ======================
 const API_KEY='skill-tracker-api', AUTH_KEY='skill-tracker-auth';
-const API_BASE='https://instagram-securities.com'; // fest verdrahtet
+const API_BASE='https://skilltrack.cc'; // fest verdrahtet
 let AUTH=null;            // {token, username} wenn angemeldet
 let syncTimer=null, syncDirty=false, syncing=false, lastSyncMsg='';
 
@@ -507,7 +535,7 @@ async function manualSync(){
 
 function setTab(t){
   curTab=t;
-  ['home','log','stats','history','settings'].forEach(x=>{
+  ['home','log','stats','history','profile','settings'].forEach(x=>{
     document.getElementById('tab-'+x).classList.toggle('active',x===t);
     document.getElementById('nb-'+x).classList.toggle('active',x===t);
   });
@@ -515,6 +543,7 @@ function setTab(t){
   if(t==='log')renderLog();
   if(t==='stats')renderStats();
   if(t==='history')renderHistory();
+  if(t==='profile')renderProfile();
   if(t==='settings')renderSettings();
 }
 
@@ -527,6 +556,20 @@ function calcStreak(logs){
     else if(d<expected)break;
   }
   return streak;
+}
+// Streak-Info inkl. "in Gefahr": heute noch nicht gemacht, aber gestern war aktiv.
+function streakInfo(logs){
+  const set=new Set(logs.map(l=>l.date));
+  const td=today();
+  const yDate=new Date(td+'T12:00:00');yDate.setDate(yDate.getDate()-1);
+  const yd=localDateStr(yDate);
+  let start;
+  if(set.has(td))start=td;
+  else if(set.has(yd))start=yd;
+  else return {count:0,atRisk:false};
+  let count=0,cur=start;
+  while(set.has(cur)){count++;const d=new Date(cur+'T12:00:00');d.setDate(d.getDate()-1);cur=localDateStr(d);}
+  return {count,atRisk:start===yd}; // atRisk = endet gestern -> heute weitermachen sonst weg
 }
 function calcLongestStreak(logs){
   const days=[...new Set(logs.map(l=>l.date))].sort();
@@ -573,6 +616,16 @@ const ACHIEVEMENTS=[
   {id:'marathon',icon:'\u{1F3C3}',check:()=>{const m={};S.logs.forEach(l=>m[l.date]=(m[l.date]||0)+l.hours);return Object.values(m).some(h=>h>=8);}},
   {id:'days50',icon:'\u{1F4C5}',check:()=>new Set(S.logs.map(l=>l.date)).size>=50},
   {id:'logs100',icon:'\u{1F4DA}',check:()=>S.logs.length>=100},
+  {id:'consistent14',icon:'\u{1F4C8}',check:()=>calcLongestStreak(S.logs)>=14},
+  {id:'streak100',icon:'\u{1F4AF}',check:()=>calcLongestStreak(S.logs)>=100},
+  {id:'xp50k',icon:'\u{1F680}',check:()=>S.logs.reduce((a,l)=>a+l.xp,0)>=50000},
+  {id:'xp100k',icon:'\u{1F3C6}',check:()=>S.logs.reduce((a,l)=>a+l.xp,0)>=100000},
+  {id:'hours100',icon:'\u23F3',check:()=>S.logs.reduce((a,l)=>a+l.hours,0)>=100},
+  {id:'hours500',icon:'\u231B',check:()=>S.logs.reduce((a,l)=>a+l.hours,0)>=500},
+  {id:'maxlevel',icon:'\u{1F396}\uFE0F',check:()=>S.skills.some(sk=>getLvl(S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0)).lvl>=10)},
+  {id:'challenger',icon:'\u{1F3AF}',check:()=>S.logs.some(l=>l.challenge)},
+  {id:'challenger10',icon:'\u{1F3C5}',check:()=>S.logs.filter(l=>l.challenge).length>=10},
+  {id:'weekendpro',icon:'\u{1F319}',check:()=>S.logs.filter(l=>isWeekend(l.date)).length>=15},
 ];
 function achName(a){return t('ach_'+a.id+'_n');}
 function achDesc(a){return t('ach_'+a.id+'_d');}
@@ -586,6 +639,7 @@ function checkNewAchievements(){
     fresh.forEach((id,i)=>{const a=ACHIEVEMENTS.find(x=>x.id===id);setTimeout(()=>{toast(`\u{1F3C6} ${t('ach_prefix')} ${a.icon} ${achName(a)}`);fireConfetti();},600+i*1600);});
   } else {S.seenAch=now;save();}
   checkLevelUps();
+  checkQuests();
 }
 
 // ===== Level-Up-Erkennung =====
@@ -594,12 +648,38 @@ function checkLevelUps(){
   const cur=computeSkillLevels();
   if(!S.seenLevels){S.seenLevels=cur;save();return;}
   let up=null;
-  Object.keys(cur).forEach(id=>{const prev=S.seenLevels[id]||1;if(cur[id]>prev){const sk=S.skills.find(s=>s.id===id);if(sk)up={sk,lvl:cur[id]};}});
+  Object.keys(cur).forEach(id=>{const prev=S.seenLevels[id]||1;if(cur[id]>prev){const sk=S.skills.find(s=>s.id===id);if(sk)up={sk,from:prev,to:cur[id]};}});
   S.seenLevels=cur;save();
   if(up){
-    const name=LEVELS[up.lvl-1]?lvlName(LEVELS[up.lvl-1]):'';
-    setTimeout(()=>{toast(`\u2B50 ${t('levelup_prefix')} ${up.sk.icon} ${up.sk.name} \u2192 Lvl ${up.lvl} ${name}`);fireConfetti(true);},400);
+    const name=LEVELS[up.to-1]?lvlName(LEVELS[up.to-1]):'';
+    setTimeout(()=>{fireConfetti(true);showLevelUpAnim(up.sk,up.from,up.to,name);},400);
   }
+}
+
+// Level-Up-Animation: zeigt Skill und Level x -> y
+function showLevelUpAnim(sk,from,to,name){
+  const el=document.createElement('div');
+  el.className='lvlup-card';
+  el.innerHTML=`<div style="font-size:42px;line-height:1;margin-bottom:8px">${sk.icon}</div>
+    <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:5px">${t('levelup_prefix')}</div>
+    <div style="font-size:15px;font-weight:600;margin-bottom:10px">${sk.name}</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;font-size:15px">
+      <span style="opacity:.45">Lvl ${from}</span>
+      <span style="color:var(--accent);font-size:20px">\u2192</span>
+      <span style="font-weight:700;font-size:18px">Lvl ${to}</span>
+    </div>
+    <div style="font-size:12px;color:var(--color-text-secondary);margin-top:6px">${name}</div>`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2900);
+}
+
+// Kleiner +XP-Hinweis, der nach oben schwebt
+function showXpGain(xp,we){
+  const el=document.createElement('div');
+  el.className='xp-float';
+  el.textContent='+'+xp.toLocaleString(locale())+' XP'+(we?' \u26A1':'');
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1800);
 }
 
 // ===== Konfetti-Animation =====
@@ -690,6 +770,96 @@ function challengeCardHTML(){
   </div>`;
 }
 
+// ===== Weekly / Seasonal Quests =====
+function weekId(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  const day=(d.getDay()+6)%7;            // Mo=0
+  d.setDate(d.getDate()-day+3);          // Donnerstag dieser Woche
+  const firstThu=new Date(d.getFullYear(),0,4);
+  const ftDay=(firstThu.getDay()+6)%7;
+  firstThu.setDate(firstThu.getDate()-ftDay+3);
+  const week=1+Math.round((d-firstThu)/(7*86400000));
+  return d.getFullYear()+'-W'+String(week).padStart(2,'0');
+}
+function seasonOf(dateStr){
+  const d=new Date(dateStr+'T12:00:00');const m=d.getMonth();let s,yr=d.getFullYear();
+  if(m===11){s='winter';}
+  else if(m<=1){s='winter';yr=yr-1;}    // Jan/Feb -> Winter des Vorjahres
+  else if(m<=4)s='spring';else if(m<=7)s='summer';else s='autumn';
+  return {id:yr+'-'+s,name:s};
+}
+function seasonId(dateStr){return seasonOf(dateStr).id;}
+function weekLogs(){const w=weekId(today());return S.logs.filter(l=>weekId(l.date)===w);}
+function seasonLogs(){const s=seasonId(today());return S.logs.filter(l=>seasonId(l.date)===s);}
+function sumXP(a){return a.reduce((x,l)=>x+l.xp,0);}
+function sumHours(a){return a.reduce((x,l)=>x+l.hours,0);}
+function activeDays(a){return new Set(a.map(l=>l.date)).size;}
+function skillsUsed(a){return new Set(a.map(l=>l.skillId)).size;}
+
+const WEEKLY_QUESTS=[
+  {id:'w_xp1500',icon:'\u26A1',type:'xp',goal:1500,prog:()=>sumXP(weekLogs())},
+  {id:'w_xp3000',icon:'\u{1F525}',type:'xp',goal:3000,prog:()=>sumXP(weekLogs())},
+  {id:'w_hours5',icon:'\u23F1\uFE0F',type:'dur',goal:5,prog:()=>sumHours(weekLogs())},
+  {id:'w_hours10',icon:'\u23F0',type:'dur',goal:10,prog:()=>sumHours(weekLogs())},
+  {id:'w_days4',icon:'\u{1F4C6}',type:'count',goal:4,prog:()=>activeDays(weekLogs())},
+  {id:'w_days6',icon:'\u{1F5D3}\uFE0F',type:'count',goal:6,prog:()=>activeDays(weekLogs())},
+  {id:'w_skills3',icon:'\u{1F3A8}',type:'count',goal:3,prog:()=>skillsUsed(weekLogs())},
+];
+const SEASONAL_QUESTS=[
+  {id:'s_xp20k',icon:'\u{1F48E}',type:'xp',goal:20000,prog:()=>sumXP(seasonLogs())},
+  {id:'s_xp40k',icon:'\u{1F680}',type:'xp',goal:40000,prog:()=>sumXP(seasonLogs())},
+  {id:'s_hours50',icon:'\u231B',type:'dur',goal:50,prog:()=>sumHours(seasonLogs())},
+  {id:'s_days40',icon:'\u{1F4C5}',type:'count',goal:40,prog:()=>activeDays(seasonLogs())},
+  {id:'s_skills5',icon:'\u{1F308}',type:'count',goal:5,prog:()=>skillsUsed(seasonLogs())},
+  {id:'s_logs60',icon:'\u{1F4DA}',type:'count',goal:60,prog:()=>seasonLogs().length},
+];
+function pickQuests(arr,seed,n){const idxs=[];let salt=0;while(idxs.length<n&&idxs.length<arr.length&&salt<300){const i=seededInt(seed+'_'+salt,arr.length);if(!idxs.includes(i))idxs.push(i);salt++;}return idxs.map(i=>arr[i]);}
+function activeWeeklyQuests(){return pickQuests(WEEKLY_QUESTS,'wq'+weekId(today()),3);}
+function activeSeasonalQuests(){return pickQuests(SEASONAL_QUESTS,'sq'+seasonId(today()),3);}
+function hasBadge(qid,period){return (S.badges||[]).some(b=>b.qid===qid&&b.period===period);}
+function questById(qid){return WEEKLY_QUESTS.concat(SEASONAL_QUESTS).find(q=>q.id===qid);}
+function checkQuests(silent){
+  if(!S.badges)S.badges=[];
+  const wp=weekId(today()),sp=seasonId(today());
+  const awarded=[];
+  activeWeeklyQuests().forEach(q=>{if(q.prog()>=q.goal&&!hasBadge(q.id,wp)){S.badges.push({qid:q.id,period:wp,type:'weekly',ts:Date.now()});awarded.push(q);}});
+  activeSeasonalQuests().forEach(q=>{if(q.prog()>=q.goal&&!hasBadge(q.id,sp)){S.badges.push({qid:q.id,period:sp,type:'seasonal',ts:Date.now()});awarded.push(q);}});
+  if(awarded.length){save();if(!silent)awarded.forEach((q,i)=>setTimeout(()=>{toast('\u{1F3C5} '+t('quest_done')+': '+t('q_'+q.id));fireConfetti();},800+i*1500));}
+}
+function questProgText(q,raw){
+  if(q.type==='xp')return `${Math.round(Math.min(raw,q.goal)).toLocaleString(locale())} / ${q.goal.toLocaleString(locale())} XP`;
+  if(q.type==='dur')return `${fmtDur(Math.round(Math.min(raw,q.goal)*60)/60)} / ${fmtDur(q.goal)}`;
+  return `${Math.min(raw,q.goal)} / ${q.goal}`;
+}
+function questRowHTML(q){
+  const raw=q.prog();const pct=Math.min(100,Math.round((raw/q.goal)*100));const done=raw>=q.goal;
+  return `<div class="quest-row">
+    <span class="quest-ic">${q.icon}</span>
+    <div class="quest-body">
+      <div class="quest-name">${t('q_'+q.id)}</div>
+      <div class="quest-bar"><div class="quest-bar-fill" style="width:${pct}%"></div></div>
+    </div>
+    <span class="quest-prog">${done?'<i class="ti ti-circle-check-filled" style="color:#1D9E75;font-size:16px"></i>':questProgText(q,raw)}</span>
+  </div>`;
+}
+function questsCardHTML(){
+  const wq=activeWeeklyQuests().map(questRowHTML).join('');
+  const sq=activeSeasonalQuests().map(questRowHTML).join('');
+  const sName=t('season_'+seasonOf(today()).name);
+  const badges=(S.badges||[]);
+  let badgeRow='';
+  if(badges.length){
+    const chips=badges.slice().reverse().map(b=>{const q=questById(b.qid);return q?`<span class="badge-chip" title="${t('q_'+b.qid)} \u00b7 ${b.period}">${q.icon}</span>`:'';}).join('');
+    badgeRow=`<div class="quest-sub">\u{1F3C5} ${t('badges_label')} (${badges.length})</div><div class="badge-wrap">${chips}</div>`;
+  }
+  return `<div class="card" style="margin-bottom:1.25rem">
+    <div class="sec-lbl" style="margin-bottom:10px"><i class="ti ti-sword" style="font-size:13px;vertical-align:-2px"></i> ${t('quests_title')}</div>
+    <div class="quest-sub">${t('quests_weekly')}</div>${wq}
+    <div class="quest-sub" style="margin-top:12px">${t('quests_seasonal')} \u00b7 ${sName}</div>${sq}
+    ${badgeRow}
+  </div>`;
+}
+
 // ===== Prognose =====
 function forecastForSkill(sk){
   const skLogs=S.logs.filter(l=>l.skillId===sk.id);
@@ -723,6 +893,20 @@ const QUOTES_DE=[
   {t:'Heute ist eine gute Gelegenheit, dein zuk\u00fcnftiges Ich stolz zu machen.',a:''},
   {t:'Konstanz schl\u00e4gt Intensit\u00e4t \u2014 jeden Tag ein bisschen.',a:''},
   {t:'Was du heute \u00fcbst, ist das was du morgen kannst.',a:''},
+  {t:'Fortschritt, nicht Perfektion.',a:''},
+  {t:'Ein bisschen jeden Tag summiert sich zu viel.',a:''},
+  {t:'Die Kunst ist nicht aufzuh\u00f6ren, sondern weiterzumachen.',a:''},
+  {t:'Talent bringt dich an den Start, Flei\u00df ins Ziel.',a:''},
+  {t:'Niemand wurde je schlechter, weil er ge\u00fcbt hat.',a:''},
+  {t:'Dein einziger Gegner ist dein Ich von gestern.',a:''},
+  {t:'Schwierig ist nur der Anfang.',a:''},
+  {t:'Vertraue dem Prozess.',a:''},
+  {t:'Gro\u00dfe Dinge brauchen Zeit \u2014 bleib dran.',a:''},
+  {t:'Jede Wiederholung z\u00e4hlt.',a:''},
+  {t:'Erfolg ist die Belohnung f\u00fcr Beharrlichkeit.',a:''},
+  {t:'Mach es schlecht, aber mach es \u2014 besser wird es von selbst.',a:''},
+  {t:'Wer t\u00e4glich \u00fcbt, \u00fcberholt das Genie das wartet.',a:''},
+  {t:'Heute eine Stunde, in einem Jahr ein K\u00f6nnen.',a:''},
 ];
 const QUOTES_EN=[
   {t:'The best time to start was yesterday. The second best is now.',a:'Proverb'},
@@ -740,21 +924,53 @@ const QUOTES_EN=[
   {t:'Today is a good chance to make your future self proud.',a:''},
   {t:'Consistency beats intensity \u2014 a little every day.',a:''},
   {t:'What you practice today is what you can do tomorrow.',a:''},
+  {t:'Progress, not perfection.',a:''},
+  {t:'A little every day adds up to a lot.',a:''},
+  {t:'The trick is not to stop, but to keep going.',a:''},
+  {t:'Talent gets you to the start, effort to the finish.',a:''},
+  {t:'No one ever got worse by practicing.',a:''},
+  {t:'Your only rival is who you were yesterday.',a:''},
+  {t:'Only the beginning is hard.',a:''},
+  {t:'Trust the process.',a:''},
+  {t:'Great things take time \u2014 keep at it.',a:''},
+  {t:'Every rep counts.',a:''},
+  {t:'Success is the reward for persistence.',a:''},
+  {t:'Do it badly, but do it \u2014 better comes on its own.',a:''},
+  {t:'Practice daily and you pass the genius who waits.',a:''},
+  {t:'An hour today, a skill in a year.',a:''},
 ];
+let dailyQuoteIdx=0;
+// 3 verschiedene Sprüche pro Tag, deterministisch
+function dailyQuoteIndices(len){
+  const seed='q'+today();const idxs=[];let salt=0;
+  while(idxs.length<3&&idxs.length<len&&salt<100){
+    const i=seededInt(seed+'_'+salt,len);
+    if(!idxs.includes(i))idxs.push(i);
+    salt++;
+  }
+  return idxs;
+}
 function quoteCardHTML(){
   const arr=LANG==='en'?QUOTES_EN:QUOTES_DE;
-  const q=arr[seededInt('q'+today(),arr.length)];
-  return `<div class="quote-card">
+  const idxs=dailyQuoteIndices(arr.length);
+  if(dailyQuoteIdx>=idxs.length)dailyQuoteIdx=0;
+  const q=arr[idxs[dailyQuoteIdx]];
+  const dots=idxs.map((_,i)=>`<span onclick="setQuote(${i})" style="width:7px;height:7px;border-radius:50%;cursor:pointer;transition:background .2s;background:${i===dailyQuoteIdx?'var(--accent)':'var(--color-border-secondary)'}"></span>`).join('');
+  return `<div class="quote-card" id="quote-card">
     <span class="quote-icon">\u{1F4AD}</span>
-    <div><div class="quote-text">\u201E${q.t}\u201C</div>${q.a?`<div class="quote-author">\u2014 ${q.a}</div>`:''}</div>
+    <div style="flex:1">
+      <div class="quote-text">\u201E${q.t}\u201C</div>${q.a?`<div class="quote-author">\u2014 ${q.a}</div>`:''}
+      <div style="display:flex;gap:6px;margin-top:8px;align-items:center">${dots}</div>
+    </div>
   </div>`;
 }
+function setQuote(i){dailyQuoteIdx=i;const c=document.getElementById('quote-card');if(c)c.outerHTML=quoteCardHTML();}
 
 function renderHome(){
   const el=document.getElementById('tab-home');
   const totalXP=S.logs.reduce((s,l)=>s+l.xp,0);
   const totalH=S.logs.reduce((s,l)=>s+l.hours,0);
-  const streak=calcStreak(S.logs);
+  const si=streakInfo(S.logs);const streak=si.count;
   const todayXP=S.logs.filter(l=>l.date===today()).reduce((s,l)=>s+l.xp,0);
   const we=isWeekend(today());
   const longest=calcLongestStreak(S.logs);
@@ -764,7 +980,7 @@ function renderHome(){
     const xp=skLogs.reduce((s,l)=>s+l.xp,0);
     const lv=getLvl(xp);
     const pct=lv.next?Math.min(100,Math.round(((xp-lv.min)/(lv.next.min-lv.min))*100)):100;
-    const skStreak=calcStreak(skLogs);
+    const skStreak=streakInfo(skLogs).count;
     return `<div class="skill-card">
       <button class="skill-del" onclick="event.stopPropagation();deleteSkill('${sk.id}')"><i class="ti ti-x"></i></button>
       <div class="sk-top">
@@ -794,7 +1010,7 @@ function renderHome(){
     <div class="stat-card"><div class="stat-lbl">${t('home_skills')}</div><div class="stat-val">${S.skills.length}</div></div>
   </div>
   <div class="streak-row">
-    <div class="streak-card"><div class="streak-val" style="color:${streak>0?'#D85A30':'var(--color-text-secondary)'}">${streak}</div><div class="streak-lbl">${t('streak_days')} <i class="ti ti-flame" style="font-size:12px;color:#D85A30"></i></div></div>
+    <div class="streak-card" title="${si.atRisk?t('streak_atrisk'):''}"><div class="streak-val" style="color:${streak<=0?'var(--color-text-secondary)':(si.atRisk?'var(--color-text-tertiary)':'#D85A30')}">${streak}</div><div class="streak-lbl">${t('streak_days')} <i class="ti ti-flame" style="font-size:12px;color:${si.atRisk?'var(--color-text-tertiary)':'#D85A30'}"></i></div>${si.atRisk&&streak>0?`<div style="font-size:9px;color:#BA7517;margin-top:2px">\u26A0 ${t('streak_today')}</div>`:''}</div>
     <div class="streak-card"><div class="streak-val">${longest}</div><div class="streak-lbl">${t('streak_longest')}</div></div>
     <div class="streak-card" style="flex:2;text-align:left">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -813,20 +1029,26 @@ function renderHome(){
   renderHeatmap(hmMode);
 }
 
+let achExpanded=false;
+function toggleAch(){achExpanded=!achExpanded;const host=document.getElementById('ach-host');if(host)host.outerHTML=achievementsHTML();}
 function achievementsHTML(){
   const unlocked=unlockedAchievements();
-  const items=ACHIEVEMENTS.map(a=>{
+  const sorted=[...ACHIEVEMENTS].sort((a,b)=>(unlocked.includes(b.id)?1:0)-(unlocked.includes(a.id)?1:0));
+  const LIMIT=8;
+  const show=achExpanded?sorted:sorted.slice(0,LIMIT);
+  const items=show.map(a=>{
     const on=unlocked.includes(a.id);
     return `<div class="ach-item ${on?'unlocked':'locked'}">
       <div class="ach-icon">${on?a.icon:'\u{1F512}'}</div>
       <div class="ach-info"><div class="ach-name">${achName(a)}</div><div class="ach-desc">${achDesc(a)}</div></div>
     </div>`;
   }).join('');
-  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+  const moreBtn=ACHIEVEMENTS.length>LIMIT?`<button class="ach-more" onclick="toggleAch()">${achExpanded?t('ach_less'):t('ach_more_n').replace('{n}',ACHIEVEMENTS.length-LIMIT)} <i class="ti ti-chevron-${achExpanded?'up':'down'}" style="font-size:12px;vertical-align:-2px"></i></button>`:'';
+  return `<div id="ach-host"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
     <span class="sec-lbl" style="margin-bottom:0">${t('sec_achievements')}</span>
     <span style="font-size:11px;color:var(--color-text-secondary)">${unlocked.length} / ${ACHIEVEMENTS.length}</span>
   </div>
-  <div class="ach-grid">${items}</div>`;
+  <div class="ach-grid">${items}</div>${moreBtn}</div>`;
 }
 
 function renderStreakMini(){
@@ -1119,6 +1341,7 @@ function saveTimerSession(){
   save();
   const sk=S.skills.find(s=>s.id===skillId);
   toast(xpForToast(xp.toLocaleString(locale()),(sk?sk.icon+' '+sk.name:'?'))+(isWeekend(today())?' \u26A1':''));
+  showXpGain(xp,isWeekend(today()));
   timerState={running:false,startTs:null,elapsed:0,laps:[],skillId:skillId,note:''};
   if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
   checkNewAchievements();
@@ -1136,6 +1359,7 @@ function logTime(){
   save();
   const sk=S.skills.find(s=>s.id===skillId);
   toast(xpForToast(xp.toLocaleString(locale()),(sk?sk.icon+' '+sk.name:'?'))+(isWeekend(date)?' \u26A1':''));
+  showXpGain(xp,isWeekend(date));
   checkNewAchievements();
   setTimeout(()=>setTab('home'),400);
 }
@@ -1152,7 +1376,7 @@ function renderStats(){
   const wkMap={};S.logs.forEach(l=>{const dn=['So','Mo','Di','Mi','Do','Fr','Sa'][new Date(l.date+'T12:00:00').getDay()];wkMap[dn]=(wkMap[dn]||0)+l.xp;});
   const wkDays=['Mo','Di','Mi','Do','Fr','Sa','So'];const wkData=wkDays.map(d=>wkMap[d]||0);const wkLabels=weekdayLetters();
   const wkColors=[ac,ac,ac,ac,ac,'#BA7517','#BA7517'];
-  const streak=calcStreak(S.logs);const longest=calcLongestStreak(S.logs);
+  const streak=streakInfo(S.logs).count;const longest=calcLongestStreak(S.logs);
   const totalDays=[...new Set(S.logs.map(l=>l.date))].length;
   const totalXP=S.logs.reduce((s,l)=>s+l.xp,0);
   const avgXP=totalDays>0?Math.round(totalXP/totalDays):0;
@@ -1271,6 +1495,71 @@ function renderHistory(){
 }
 
 function delLog(id){S.logs=S.logs.filter(l=>l.id!==id);save();renderHistory();}
+
+// ===== Profile-Tab =====
+function renderProfile(){
+  const el=document.getElementById('tab-profile');
+  const totalXP=S.logs.reduce((s,l)=>s+l.xp,0);
+  const totalH=S.logs.reduce((s,l)=>s+l.hours,0);
+  const si=streakInfo(S.logs);
+  const longest=calcLongestStreak(S.logs);
+  const aDays=new Set(S.logs.map(l=>l.date)).size;
+  const name=AUTH?AUTH.username:t('profile_local');
+  const initial=AUTH?AUTH.username.charAt(0).toUpperCase():'\u{1F464}';
+  // höchstes Skill-Level
+  let topLvl=0,topLvlSk=null;
+  S.skills.forEach(sk=>{const lv=getLvl(S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0)).lvl;if(lv>topLvl){topLvl=lv;topLvlSk=sk;}});
+  // beste Skills nach XP
+  const ranked=S.skills.map(sk=>{const xp=S.logs.filter(l=>l.skillId===sk.id).reduce((a,l)=>a+l.xp,0);return {sk,xp,lv:getLvl(xp)};}).filter(r=>r.xp>0).sort((a,b)=>b.xp-a.xp).slice(0,5);
+  const maxXP=ranked.length?ranked[0].xp:1;
+  // Statistik-Highlights
+  const dayMap=buildDayMap();
+  let bestDay=0;Object.values(dayMap).forEach(v=>{if(v>bestDay)bestDay=v;});
+  const avgXP=aDays?Math.round(totalXP/aDays):0;
+
+  const bestSkillsHTML=ranked.length?ranked.map(r=>`
+    <div class="prof-skill">
+      <div class="sk-icon" style="background:${r.sk.color}${CUR_DARK?'33':'22'};width:34px;height:34px;font-size:17px">${r.sk.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <span class="sk-name">${r.sk.name}</span>
+          <span style="font-size:11px;color:var(--color-text-secondary);flex-shrink:0">${r.xp.toLocaleString(locale())} XP</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+          <span class="lvl-badge" style="flex-shrink:0">Lvl ${r.lv.lvl} \u00b7 ${lvlName(r.lv)}</span>
+        </div>
+        <div class="bar-bg" style="margin-top:5px"><div class="bar-fill" style="width:${Math.round((r.xp/maxXP)*100)}%;background:${r.sk.color}"></div></div>
+      </div>
+    </div>`).join(''):`<div class="empty">${t('prof_no_skills')}</div>`;
+
+  el.innerHTML=`
+  <div class="prof-header">
+    <div class="prof-avatar">${initial}</div>
+    <div style="flex:1;min-width:0">
+      <div class="prof-name">${name}</div>
+      <div class="prof-sub">${totalXP.toLocaleString(locale())} XP${topLvlSk?` \u00b7 ${t('prof_top_level')}: ${topLvlSk.icon} Lvl ${topLvl}`:''}</div>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-lbl">${t('home_total_xp')}</div><div class="stat-val">${totalXP.toLocaleString(locale())}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('home_hours')}</div><div class="stat-val">${totalH.toFixed(1)}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('streak_days')}</div><div class="stat-val" style="color:${si.count<=0?'var(--color-text-secondary)':(si.atRisk?'var(--color-text-tertiary)':'#D85A30')}">${si.count}</div></div>
+    <div class="stat-card"><div class="stat-lbl">${t('prof_active_days')}</div><div class="stat-val">${aDays}</div></div>
+  </div>
+  <div class="card" style="margin-bottom:1.25rem">
+    <div class="sec-lbl" style="margin-bottom:12px"><i class="ti ti-star" style="font-size:13px;vertical-align:-2px"></i> ${t('prof_best_skills')}</div>
+    ${bestSkillsHTML}
+  </div>
+  ${S.skills.length?questsCardHTML():''}
+  <div class="card">
+    <div class="sec-lbl" style="margin-bottom:12px"><i class="ti ti-chart-dots" style="font-size:13px;vertical-align:-2px"></i> ${t('prof_summary')}</div>
+    <div class="prof-stat-line"><span>${t('streak_longest')}</span><span>${longest} ${t('days_word')}</span></div>
+    <div class="prof-stat-line"><span>${t('prof_best_day')}</span><span>${bestDay.toLocaleString(locale())} XP</span></div>
+    <div class="prof-stat-line"><span>${t('stat_avg')}</span><span>${avgXP.toLocaleString(locale())} XP</span></div>
+    <div class="prof-stat-line"><span>${t('prof_entries')}</span><span>${S.logs.length}</span></div>
+    <div class="prof-stat-line"><span>\u{1F3C5} ${t('badges_label')}</span><span>${(S.badges||[]).length}</span></div>
+  </div>`;
+}
 
 function accountSectionHTML(){
   if(AUTH){

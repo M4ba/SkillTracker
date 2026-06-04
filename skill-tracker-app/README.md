@@ -1,66 +1,94 @@
-# Skill Tracker — Desktop App
+<div align="center">
 
-## Schnellstart
+# 🎯 Skill Tracker
 
-### 1. Voraussetzungen
-- **Node.js** installieren: https://nodejs.org  (LTS-Version)
-- Einmalig, danach nicht mehr nötig
+**Verfolge deine Übungszeit, sammle XP und steige im Level auf.**
 
-### 2. App starten (Entwicklungsmodus)
-```
-Im Ordner: Rechtsklick → "In Terminal öffnen"
-npm install        ← einmalig, lädt ~200MB
-npm start          ← App öffnet sich
-```
+Eine gamifizierte Desktop- & Web-App, die jede geübte Stunde in Fortschritt verwandelt –
+mit Skills, Leveln, Achievements, Quests und Cloud-Sync über mehrere Geräte.
 
-### 3. Installer bauen
-```
-npm run build
-```
-Erzeugt in `dist/`:
-- `Skill Tracker Setup 1.0.0.exe`  →  Installer mit Startmenü-Eintrag
-- `Skill Tracker 1.0.0.exe`        →  Portable, keine Installation nötig
+![Version](https://img.shields.io/badge/version-1.6.0-7F77DD)
+![Plattform](https://img.shields.io/badge/Plattform-Windows%20%7C%20Browser-378ADD)
+![Electron](https://img.shields.io/badge/Electron-31-1D9E75)
+![Sprachen](https://img.shields.io/badge/Sprachen-DE%20%7C%20EN-D4537E)
+
+</div>
 
 ---
 
-## Auto-Updates einrichten (optional, empfohlen)
+## ✨ Was kann die App?
 
-Damit die App sich wie Discord automatisch updaten kann:
+Skill Tracker macht aus stumpfem Zeit-Loggen ein Spiel: Jede Stunde Übung gibt **100 XP**
+(am Wochenende **doppelt**), du steigst durch **10 Level** auf und schaltest unterwegs
+Achievements und Abzeichen frei.
 
-### Schritt 1: GitHub-Konto + Repository
-1. Kostenloses Konto auf https://github.com erstellen
-2. Neues Repository anlegen: `skill-tracker` (privat oder öffentlich)
-3. In `package.json` ersetzen:
-   ```
-   "owner": "DEIN-GITHUB-USERNAME"
-   ```
+### 🎮 Gamification
+- **XP & 10 Level** pro Skill – von *Neuling* bis *Legende* (1.000 Stunden)
+- **22 Achievements** mit Konfetti beim Freischalten
+- **Tägliche Challenge** – jeden Tag ein neues, faires Ziel
+- **Wochen- & Saison-Quests** mit sammelbaren Abzeichen
+- **Streaks** mit „in Gefahr"-Warnung, bevor sie reißen
+- **Level-Up-Animation**, Konfetti und schwebende +XP-Hinweise
 
-### Schritt 2: GitHub Token erstellen
-1. GitHub → Settings → Developer Settings → Personal Access Tokens
-2. Neues Token mit Berechtigung `repo` erstellen
-3. Als Umgebungsvariable setzen:
-   ```
-   Windows: setx GH_TOKEN "dein-token-hier"
-   ```
+### 📊 Tracking & Statistik
+- **Manuelles Erfassen** oder integrierte **Stoppuhr** mit Runden
+- **Heatmaps** – rollierendes Jahr (GitHub-Stil) und Kalenderjahr
+- **Statistiken** – XP-Verlauf, Wochentags-Analyse, Skill-Verteilung, Radar-Chart
+- **Prognose** – „noch ~X Wochen bis zum nächsten Level" nach deinem aktuellen Tempo
 
-### Schritt 3: Update veröffentlichen
-Wenn du eine neue Version baust und veröffentlichen willst:
-1. `version` in `package.json` erhöhen (z.B. `1.0.0` → `1.1.0`)
-2. Dann:
-   ```
-   npm run publish
-   ```
-   Das baut die App UND lädt sie automatisch als GitHub Release hoch.
+### 👤 Profil
+- Übersicht mit Benutzername, Gesamt-XP, Streak und besten Skills
+- Gesammelte Abzeichen und persönliche Bestwerte auf einen Blick
 
-### Wie Updates dann funktionieren
-- App startet → prüft nach 3 Sekunden automatisch auf neue Version
-- Update verfügbar → lädt im Hintergrund herunter (Banner oben)
-- Download fertig → Banner: "Jetzt neu starten" → Update wird installiert
-- Einstellungen-Tab zeigt immer die aktuelle Version
+### ☁️ Cloud-Sync (optional)
+- **Account mit gehashtem Passwort** (bcrypt)
+- **Multi-Device** – auf dem Laptop loggen, am Handy weitermachen
+- **Offline-first** – funktioniert auch ohne Verbindung, synchronisiert später
+- Daten bleiben ohne Account komplett lokal
+
+### 🎨 Komfort
+- **7 Designs** – Hell, Dunkel, Rosa, Blau, Wald, Türkis, Bernstein
+- **2 Sprachen** – Deutsch & Englisch, jederzeit umschaltbar
+- **Backup** – Export/Import als JSON-Datei
+- **Auto-Updates** über GitHub Releases (wie bei Discord)
 
 ---
 
-## Daten
-- Gespeichert in `%APPDATA%\Skill Tracker\`
-- **Bleiben bei Updates automatisch erhalten** — kein Export/Import nötig!
-- Export-Funktion weiterhin vorhanden für manuelle Backups / Geräte-Wechsel
+## 📸 Screenshots
+
+> _Hier kannst du Screenshots einfügen. Lege sie z.B. in einen Ordner `docs/`
+> und binde sie so ein:_
+
+```markdown
+![Home](docs/home.png)
+![Statistik](docs/stats.png)
+![Profil](docs/profile.png)
+```
+
+---
+
+## 🚀 Installation
+
+### Für Nutzer (fertige App)
+1. Gehe zu [**Releases**](../../releases)
+2. Lade die neueste `Skill Tracker Setup x.x.x.exe` herunter
+3. Ausführen und installieren – fertig. Updates kommen danach automatisch.
+
+> Beim ersten Start zeigt Windows eventuell „Unbekannter Herausgeber".
+> Das ist bei nicht zertifizierten Apps normal → *Weitere Informationen* → *Trotzdem ausführen*.
+
+### Im Browser (ohne Installation)
+Die Datei `skill-tracker.html` lässt sich direkt im Browser öffnen – ideal zum schnellen Ausprobieren.
+---
+
+## 📝 Lizenz
+
+Privates Projekt. Alle Rechte vorbehalten, sofern nicht anders angegeben.
+
+<div align="center">
+
+---
+
+Mit ❤️ gebaut, um das Üben zur Gewohnheit zu machen.
+
+</div>
