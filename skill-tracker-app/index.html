@@ -346,7 +346,7 @@ de:{
  chal_dur45:'Bleib dran: heute mind. 45 Minuten',chal_dur60:'\u00dcbe heute mindestens 1 Stunde',chal_dur120:'Sammle heute 2 Stunden Lernzeit',
  chal_dur180:'Gro\u00dfer Tag: 3 Stunden heute',chal_focus90:'Fokus-Session: 90 Min am selben Skill',chal_focus120:'Tiefer Fokus: 2h an einem einzigen Skill',
  chal_two30:'2 Skills f\u00fcr je mind. 30 Minuten',chal_three20:'3 Skills f\u00fcr je mind. 20 Minuten',chal_xp300:'Erreiche heute 300 XP',chal_xp500:'Erreiche heute 500 XP',
-set_account:'Account',acc_logged_in_as:'Angemeldet als',acc_server:'Server-Adresse',acc_username:'Benutzername',acc_password:'Passwort',acc_login:'Anmelden',acc_register:'Registrieren',acc_logout:'Abmelden',acc_sync_now:'Jetzt synchronisieren',acc_offline_hint:'Ohne Account werden deine Daten nur lokal gespeichert. Mit Account kannst du sie ger\u00e4te\u00fcbergreifend synchronisieren.',sync_saved:'\u2713 Synchronisiert',sync_offline:'\u26A0 Offline \u2014 wird sp\u00e4ter synchronisiert',sync_session_expired:'\u26A0 Sitzung abgelaufen \u2014 bitte neu anmelden',sync_pulling:'Lade Daten...',acc_err_fill:'Bitte Benutzername und Passwort eingeben',acc_welcome:'Willkommen',acc_login_failed:'Anmeldung fehlgeschlagen: ',
+set_account:'Account',acc_logged_in_as:'Angemeldet als',acc_server:'Server-Adresse',acc_username:'Benutzername',acc_password:'Passwort',acc_login:'Anmelden',acc_register:'Registrieren',acc_logout:'Abmelden',acc_sync_now:'Jetzt synchronisieren',acc_offline_hint:'Ohne Account werden deine Daten nur lokal gespeichert. Mit Account kannst du sie ger\u00e4te\u00fcbergreifend synchronisieren.',sync_saved:'\u2713 Synchronisiert',sync_offline:'\u26A0 Offline \u2014 wird sp\u00e4ter synchronisiert',sync_session_expired:'\u26A0 Sitzung abgelaufen \u2014 bitte neu anmelden',sync_pulling:'Lade Daten...',acc_err_fill:'Bitte Benutzername und Passwort eingeben',acc_welcome:'Willkommen',acc_login_failed:'Anmeldung fehlgeschlagen: ',acc_delete:'Profil l\u00f6schen',acc_delete_c1:'Profil wirklich l\u00f6schen? Dein Account und alle Cloud-Daten werden dauerhaft entfernt.',acc_delete_c2:'Bist du sicher? Das kann nicht r\u00fcckg\u00e4ngig gemacht werden. (Deine lokalen Daten auf diesem Ger\u00e4t bleiben erhalten.)',acc_delete_done:'Profil gel\u00f6scht',
 },
 en:{
  nav_home:'Home',nav_log:'Log',nav_stats:'Stats',nav_history:'History',nav_profile:'Profile',nav_settings:'Settings',profile_local:'Local profile',prof_top_level:'Top level',prof_best_skills:'Top Skills',prof_active_days:'Active days',prof_summary:'Statistics',prof_best_day:'Best day',prof_entries:'Entries',prof_no_skills:'No skills yet',
@@ -395,7 +395,7 @@ en:{
  chal_dur45:'Keep it up: at least 45 minutes today',chal_dur60:'Practice at least 1 hour today',chal_dur120:'Collect 2 hours of practice today',
  chal_dur180:'Big day: 3 hours today',chal_focus90:'Focus session: 90 min on the same skill',chal_focus120:'Deep focus: 2h on a single skill',
  chal_two30:'2 skills for at least 30 minutes each',chal_three20:'3 skills for at least 20 minutes each',chal_xp300:'Reach 300 XP today',chal_xp500:'Reach 500 XP today',
-set_account:'Account',acc_logged_in_as:'Logged in as',acc_server:'Server address',acc_username:'Username',acc_password:'Password',acc_login:'Log in',acc_register:'Sign up',acc_logout:'Log out',acc_sync_now:'Sync now',acc_offline_hint:'Without an account your data is stored locally only. With an account you can sync it across devices.',sync_saved:'\u2713 Synced',sync_offline:'\u26A0 Offline \u2014 will sync later',sync_session_expired:'\u26A0 Session expired \u2014 please log in again',sync_pulling:'Loading data...',acc_err_fill:'Please enter username and password',acc_welcome:'Welcome',acc_login_failed:'Login failed: ',
+set_account:'Account',acc_logged_in_as:'Logged in as',acc_server:'Server address',acc_username:'Username',acc_password:'Password',acc_login:'Log in',acc_register:'Sign up',acc_logout:'Log out',acc_sync_now:'Sync now',acc_offline_hint:'Without an account your data is stored locally only. With an account you can sync it across devices.',sync_saved:'\u2713 Synced',sync_offline:'\u26A0 Offline \u2014 will sync later',sync_session_expired:'\u26A0 Session expired \u2014 please log in again',sync_pulling:'Loading data...',acc_err_fill:'Please enter username and password',acc_welcome:'Welcome',acc_login_failed:'Login failed: ',acc_delete:'Delete account',acc_delete_c1:'Really delete your account? Your account and all cloud data will be permanently removed.',acc_delete_c2:'Are you sure? This cannot be undone. (Your local data on this device will remain.)',acc_delete_done:'Account deleted',
 }
 };
 function t(k){const v=I18N[LANG]&&I18N[LANG][k];return v!==undefined?v:(I18N.de[k]!==undefined?I18N.de[k]:k);}
@@ -435,6 +435,7 @@ function save(){
 const API_KEY='skill-tracker-api', AUTH_KEY='skill-tracker-auth';
 const API_BASE='https://skilltrack.cc'; // fest verdrahtet
 let AUTH=null;            // {token, username} wenn angemeldet
+let authError='',authUserDraft='';
 let syncTimer=null, syncDirty=false, syncing=false, lastSyncMsg='';
 
 function loadAuthConfig(){
@@ -505,22 +506,41 @@ function setSyncMsg(m){lastSyncMsg=m;const e=document.getElementById('sync-statu
 async function submitAuth(mode){
   const u=(document.getElementById('auth-user')||{}).value||'';
   const p=(document.getElementById('auth-pass')||{}).value||'';
-  if(!u.trim()||!p){alert(t('acc_err_fill'));return;}
+  authUserDraft=u;
+  if(!u.trim()||!p){authError=t('acc_err_fill');renderSettings();focusAuthPass();return;}
   const btn=document.getElementById('auth-btn-'+mode);
   if(btn){btn.disabled=true;btn.style.opacity='.6';}
+  authError='';
   try{
     if(mode==='register')await doRegister(u.trim(),p);
     else await doLogin(u.trim(),p);
-    // Nach Login: Server-Daten holen (Cloud = Hauptquelle)
     setSyncMsg(t('sync_pulling'));
     try{await cloudPull();}catch(e){/* offline: lokale Daten behalten */}
     setSyncMsg('');
+    authError='';authUserDraft='';
     toast(t('acc_welcome')+', '+AUTH.username+'!');
     renderSettings();renderHome();
   }catch(e){
+    authError=t('acc_login_failed')+e.message;
+    renderSettings();        // frisch rendern -> Felder bleiben klickbar
+    focusAuthPass();
+  }
+}
+function focusAuthPass(){setTimeout(()=>{const el=document.getElementById('auth-pass');if(el)el.focus();},40);}
+
+// Profil/Account löschen
+async function deleteAccount(){
+  if(!AUTH)return;
+  if(!confirm(t('acc_delete_c1')))return;
+  if(!confirm(t('acc_delete_c2')))return;
+  try{
+    await api('/api/account','DELETE',null,true);
+    AUTH=null;try{localStorage.removeItem(AUTH_KEY);}catch(e){}
+    setSyncMsg('');authError='';authUserDraft='';
+    toast(t('acc_delete_done'));
+    renderSettings();
+  }catch(e){
     alert(t('acc_login_failed')+e.message);
-  }finally{
-    if(btn){btn.disabled=false;btn.style.opacity='1';}
   }
 }
 
@@ -1561,6 +1581,7 @@ function renderProfile(){
   </div>`;
 }
 
+function escAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function accountSectionHTML(){
   if(AUTH){
     return `<div class="sec-lbl">${t('set_account')}</div>
@@ -1574,13 +1595,15 @@ function accountSectionHTML(){
         </div>
       </div>
       <div id="sync-status" style="font-size:11px;color:var(--color-text-secondary);margin-top:8px;min-height:14px">${lastSyncMsg}</div>
+      <button class="settings-btn" style="color:#E24B4A;border-color:#E24B4A55;margin-top:12px" onclick="deleteAccount()"><i class="ti ti-trash"></i> ${t('acc_delete')}</button>
     </div>`;
   }
   return `<div class="sec-lbl">${t('set_account')}</div>
   <div class="card" style="margin-bottom:1.25rem">
     <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px">${t('acc_offline_hint')}</div>
-    <div class="modal-row" style="margin-bottom:8px"><label>${t('acc_username')}</label><input type="text" id="auth-user" autocomplete="username"></div>
-    <div class="modal-row" style="margin-bottom:12px"><label>${t('acc_password')}</label><input type="password" id="auth-pass" autocomplete="current-password"></div>
+    <div class="modal-row" style="margin-bottom:8px"><label>${t('acc_username')}</label><input type="text" id="auth-user" autocomplete="username" value="${escAttr(authUserDraft)}"></div>
+    <div class="modal-row" style="margin-bottom:${authError?'8':'12'}px"><label>${t('acc_password')}</label><input type="password" id="auth-pass" autocomplete="current-password"></div>
+    ${authError?`<div style="font-size:11.5px;color:#E24B4A;margin-bottom:12px">${escAttr(authError)}</div>`:''}
     <div style="display:flex;gap:8px">
       <button class="btn-ok" id="auth-btn-login" style="flex:1;padding:9px" onclick="submitAuth('login')">${t('acc_login')}</button>
       <button class="settings-btn" id="auth-btn-register" style="flex:1" onclick="submitAuth('register')">${t('acc_register')}</button>

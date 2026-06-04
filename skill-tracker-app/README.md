@@ -7,7 +7,7 @@
 Eine gamifizierte Desktop- & Web-App, die jede geübte Stunde in Fortschritt verwandelt –
 mit Skills, Leveln, Achievements, Quests und Cloud-Sync über mehrere Geräte.
 
-![Version](https://img.shields.io/badge/version-1.6.0-7F77DD)
+![Version](https://img.shields.io/badge/version-1.4.1-7F77DD)
 ![Plattform](https://img.shields.io/badge/Plattform-Windows%20%7C%20Browser-378ADD)
 ![Electron](https://img.shields.io/badge/Electron-31-1D9E75)
 ![Sprachen](https://img.shields.io/badge/Sprachen-DE%20%7C%20EN-D4537E)
